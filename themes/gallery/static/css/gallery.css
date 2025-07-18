@@ -55,7 +55,7 @@ header {
 }
 
 .phone-icon-bottom img:hover {
-    transform: scale(1.1);
+    transform: scale(1.01);
 }
 
 .artist-info h1 {
@@ -123,7 +123,7 @@ main {
 }
 
 .gallery-item:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
     z-index: 10;
 }
 
