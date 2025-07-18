@@ -119,6 +119,7 @@ main {
     padding: 0;
     break-inside: avoid;
     page-break-inside: avoid;
+    vertical-align: top;
 }
 
 .gallery-item:hover {
@@ -132,6 +133,9 @@ main {
     display: block;
     transition: opacity 0.3s ease;
     vertical-align: top;
+    margin: 0;
+    padding: 0;
+    border: none;
 }
 
 .gallery-item:hover img {
@@ -220,16 +224,19 @@ footer {
 
 .lightbox-content {
     position: relative;
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 95%;
+    max-height: 95%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 2rem;
 }
 
 .lightbox-content img {
     max-width: 100%;
     max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
     border-radius: 4px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -289,6 +296,12 @@ footer {
     
     .lightbox-nav {
         padding: 0 1rem;
+    }
+    
+    .lightbox-content {
+        max-width: 98%;
+        max-height: 98%;
+        padding: 1rem;
     }
     
     .nav-btn {

@@ -105,6 +105,12 @@ class Gallery {
         this.lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
         
+        // Reset image styles for proper scaling
+        this.lightboxImage.style.maxWidth = '100%';
+        this.lightboxImage.style.maxHeight = '100%';
+        this.lightboxImage.style.width = 'auto';
+        this.lightboxImage.style.height = 'auto';
+        
         // Preload adjacent images
         this.preloadAdjacentImages();
     }
@@ -117,12 +123,26 @@ class Gallery {
     showPrevious() {
         this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.images.length - 1;
         this.lightboxImage.src = this.images[this.currentIndex];
+        
+        // Reset image styles for proper scaling
+        this.lightboxImage.style.maxWidth = '100%';
+        this.lightboxImage.style.maxHeight = '100%';
+        this.lightboxImage.style.width = 'auto';
+        this.lightboxImage.style.height = 'auto';
+        
         this.preloadAdjacentImages();
     }
     
     showNext() {
         this.currentIndex = this.currentIndex < this.images.length - 1 ? this.currentIndex + 1 : 0;
         this.lightboxImage.src = this.images[this.currentIndex];
+        
+        // Reset image styles for proper scaling
+        this.lightboxImage.style.maxWidth = '100%';
+        this.lightboxImage.style.maxHeight = '100%';
+        this.lightboxImage.style.width = 'auto';
+        this.lightboxImage.style.height = 'auto';
+        
         this.preloadAdjacentImages();
     }
     
