@@ -19,17 +19,15 @@ header {
     position: relative;
 }
 
-.header-icons {
+.qr-code-center {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 3rem;
     margin-bottom: 2rem;
 }
 
-.qr-code img {
+.qr-code-center img {
     width: auto;
-    height: 120px;
+    height: 150px;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     background: white;
@@ -37,17 +35,27 @@ header {
     transition: transform 0.3s ease;
 }
 
-.phone-icon img {
+.qr-code-center img:hover {
+    transform: scale(1.1);
+}
+
+.phone-icon-bottom {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.phone-icon-bottom img {
     width: auto;
-    height: 100px;
-    border-radius: 12px;
+    height: 60px;
+    border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     background: white;
-    padding: 8px;
+    padding: 6px;
     transition: transform 0.3s ease;
 }
 
-.qr-code img:hover, .phone-icon img:hover {
+.phone-icon-bottom img:hover {
     transform: scale(1.1);
 }
 
@@ -291,17 +299,21 @@ footer {
         font-size: 1.2rem;
     }
     
-    .header-icons {
-        gap: 2rem;
+    .qr-code-center {
         margin-bottom: 1.5rem;
     }
     
-    .qr-code img {
-        height: 90px;
+    .qr-code-center img {
+        height: 120px;
     }
     
-    .phone-icon img {
-        height: 75px;
+    .phone-icon-bottom {
+        bottom: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .phone-icon-bottom img {
+        height: 45px;
     }
     
     .footer-content {
@@ -329,17 +341,21 @@ footer {
         align-items: center;
     }
     
-    .header-icons {
-        gap: 1.5rem;
+    .qr-code-center {
         margin-bottom: 1rem;
     }
     
-    .qr-code img {
-        height: 70px;
+    .qr-code-center img {
+        height: 100px;
     }
     
-    .phone-icon img {
-        height: 60px;
+    .phone-icon-bottom {
+        bottom: 0.3rem;
+        right: 0.3rem;
+    }
+    
+    .phone-icon-bottom img {
+        height: 40px;
     }
     
     .brush-icon img {
