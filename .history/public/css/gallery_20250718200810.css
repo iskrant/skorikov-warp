@@ -7,8 +7,8 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
-    color: #e0e0e0;
-    background-color: #37393a;
+    color: #333;
+    background-color: #f8f9fa;
 }
 
 header {
@@ -94,10 +94,10 @@ main {
     column-count: auto;
     column-width: 300px;
     column-gap: 0;
-    background: #37393a;
+    background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-item {
@@ -134,13 +134,12 @@ main {
 .no-images {
     text-align: center;
     padding: 4rem 2rem;
-    color: #bbb;
+    color: #666;
     font-size: 1.1rem;
 }
 
 .no-images code {
-    background: #4a4c4d;
-    color: #e0e0e0;
+    background: #f1f3f4;
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
     font-family: 'Courier New', monospace;
@@ -148,7 +147,7 @@ main {
 
 /* Footer */
 footer {
-    background: linear-gradient(135deg, #3d3700 0%, #37393a 100%);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     color: white;
     padding: 2rem 0;
     margin-top: 3rem;
@@ -268,47 +267,47 @@ footer {
     .artist-info h1 {
         font-size: 2rem;
     }
-    
+
     .contacts {
         gap: 1rem;
     }
-    
+
     .gallery-container {
         column-width: 200px;
     }
-    
+
     .gallery-item:hover {
         transform: none;
     }
-    
+
     .lightbox-nav {
         padding: 0 1rem;
     }
-    
+
     .nav-btn {
         width: 40px;
         height: 40px;
         font-size: 1.2rem;
     }
-    
+
     .header-icons {
         gap: 2rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .qr-code img {
         height: 90px;
     }
-    
+
     .phone-icon img {
         height: 75px;
     }
-    
+
     .footer-content {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .brush-icon img {
         width: 60px;
         height: 60px;
@@ -319,34 +318,34 @@ footer {
     .gallery-container {
         column-width: 150px;
     }
-    
+
     .artist-info h1 {
         font-size: 1.5rem;
     }
-    
+
     .contacts {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .header-icons {
         gap: 1.5rem;
         margin-bottom: 1rem;
     }
-    
+
     .qr-code img {
         height: 70px;
     }
-    
+
     .phone-icon img {
         height: 60px;
     }
-    
+
     .brush-icon img {
         width: 50px;
         height: 50px;
     }
-    
+
     .footer-text p {
         font-size: 1rem;
     }
