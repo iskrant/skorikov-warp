@@ -41,7 +41,7 @@ header {
 
 .phone-icon-bottom {
     position: absolute;
-    bottom: 1rem;
+    bottom: 0.5rem;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -318,7 +318,7 @@ footer {
     }
     
     .phone-icon-bottom {
-        bottom: 0.5rem;
+        bottom: 0.3rem;
         left: 50%;
         transform: translateX(-50%);
     }
@@ -361,7 +361,7 @@ footer {
     }
     
     .phone-icon-bottom {
-        bottom: 0.3rem;
+        bottom: 0.2rem;
         left: 50%;
         transform: translateX(-50%);
     }
