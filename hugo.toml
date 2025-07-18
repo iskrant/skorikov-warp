@@ -1,4 +1,4 @@
-baseURL = 'https://gallery.skorikov.su/'
+baseURL = 'https://username.github.io/skorikov-gallery'
 languageCode = 'ru-ru'
 title = 'Скориков Игорь Андреевич - Галерея'
 theme = 'gallery'
@@ -8,7 +8,7 @@ theme = 'gallery'
   artist_title = "Член союза художников России"
   phone = "+79081234567"
   email = "skorikov.igor@gmail.com"
-  telegram = "@Igor_Skorikov"
+  telegram = "@skorikoviii"
 
 [imaging]
   quality = 85
