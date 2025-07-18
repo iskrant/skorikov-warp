@@ -1,0 +1,20 @@
+baseURL = 'https://username.github.io/skorikov-gallery'
+languageCode = 'ru-ru'
+title = 'Скориков Игорь Андреевич - Галерея'
+theme = 'gallery'
+
+[params]
+  artist_name = "Скориков Игорь Андреевич"
+  artist_title = "Член союза художников России"
+  phone = "+79081234567"
+  email = "skorikov.igor@gmail.com"
+  telegram = "@skorikoviii"
+
+[imaging]
+  quality = 85
+  resampleFilter = "lanczos"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

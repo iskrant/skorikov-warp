@@ -1,0 +1,5 @@
+name = "gallery"
+description = "Artist gallery theme"
+author = "Custom"
+license = "MIT"
+min_version = "0.110.0"

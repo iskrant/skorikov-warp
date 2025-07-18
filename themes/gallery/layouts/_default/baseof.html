@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <meta name="description" content="{{ .Site.Params.artist_name }} - {{ .Site.Params.artist_title }}">
+    <link rel="stylesheet" href="{{ "css/gallery.css" | relURL }}">
+</head>
+<body>
+    <header>
+        <div class="artist-info">
+            <h1>{{ .Site.Params.artist_name }}</h1>
+            <p>{{ .Site.Params.artist_title }}</p>
+            <div class="contacts">
+                <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a>
+                <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a>
+                <a href="https://t.me/{{ strings.TrimPrefix "@" .Site.Params.telegram }}" target="_blank">{{ .Site.Params.telegram }}</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+    
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <img id="lightbox-image" src="" alt="">
+            <div class="lightbox-nav">
+                <button id="prev-btn" class="nav-btn">‹</button>
+                <button id="next-btn" class="nav-btn">›</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ "js/gallery.js" | relURL }}"></script>
+</body>
+</html>
