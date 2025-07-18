@@ -59,12 +59,13 @@ main {
 
 .gallery-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 0;
-    background: white;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2px;
+    background: #f0f0f0;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2px;
 }
 
 .gallery-item {
@@ -72,7 +73,12 @@ main {
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.3s ease;
-    aspect-ratio: 1;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
 }
 
 .gallery-item:hover {
@@ -81,9 +87,11 @@ main {
 }
 
 .gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     display: block;
     transition: opacity 0.3s ease;
 }
@@ -186,7 +194,13 @@ main {
     }
     
     .gallery-container {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1px;
+        padding: 1px;
+    }
+    
+    .gallery-item {
+        min-height: 150px;
     }
     
     .gallery-item:hover {
@@ -206,7 +220,11 @@ main {
 
 @media (max-width: 480px) {
     .gallery-container {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    
+    .gallery-item {
+        min-height: 120px;
     }
     
     .artist-info h1 {
