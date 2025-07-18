@@ -30,7 +30,7 @@ header {
     height: 150px;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    background: white;
+    background: rgba(53, 53, 53, 0.082);
     padding: 8px;
     transition: transform 0.3s ease;
 }
@@ -48,7 +48,7 @@ header {
 
 .phone-icon-bottom img {
     width: auto;
-    height: 60px;
+    height: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
@@ -282,56 +282,56 @@ footer {
     .artist-info h1 {
         font-size: 2rem;
     }
-    
+
     .contacts {
         gap: 1rem;
     }
-    
+
     .gallery-container {
         column-width: 200px;
     }
-    
+
     .gallery-item:hover {
         transform: none;
     }
-    
+
     .lightbox-nav {
         padding: 0 1rem;
     }
-    
+
     .lightbox-content {
         padding: 1rem;
     }
-    
+
     .nav-btn {
         width: 40px;
         height: 40px;
         font-size: 1.2rem;
     }
-    
+
     .qr-code-center {
         margin-bottom: 1.5rem;
     }
-    
+
     .qr-code-center img {
         height: 120px;
     }
-    
+
     .phone-icon-bottom {
         bottom: -0.3rem;
         left: 50%;
         transform: translateX(-50%);
     }
-    
+
     .phone-icon-bottom img {
         height: 45px;
     }
-    
+
     .footer-content {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .brush-icon img {
         width: 60px;
         height: 60px;
@@ -342,39 +342,39 @@ footer {
     .gallery-container {
         column-width: 150px;
     }
-    
+
     .artist-info h1 {
         font-size: 1.5rem;
     }
-    
+
     .contacts {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .qr-code-center {
         margin-bottom: 1rem;
     }
-    
+
     .qr-code-center img {
         height: 100px;
     }
-    
+
     .phone-icon-bottom {
         bottom: -0.2rem;
         left: 50%;
         transform: translateX(-50%);
     }
-    
+
     .phone-icon-bottom img {
         height: 40px;
     }
-    
+
     .brush-icon img {
         width: 50px;
         height: 50px;
     }
-    
+
     .footer-text p {
         font-size: 1rem;
     }
