@@ -25,11 +25,11 @@
             <img src="{{ "images/tel.png" | relURL }}" alt="Телефон">
         </div>
     </header>
-    
+
     <main>
         {{ block "main" . }}{{ end }}
     </main>
-    
+
     <footer>
         <div class="footer-content">
             <div class="brush-icon">
@@ -37,11 +37,11 @@
             </div>
             <div class="footer-text">
                 <p>&copy; {{ now.Format "2006" }} {{ .Site.Params.artist_name }}</p>
-                <p>Творчество с душой</p>
+                <p>Искусство вечно</p>
             </div>
         </div>
     </footer>
-    
+
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
             <img id="lightbox-image" src="" alt="">
@@ -51,7 +51,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="{{ "js/gallery.js" | relURL }}"></script>
 </body>
 </html>
