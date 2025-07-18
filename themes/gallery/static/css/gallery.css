@@ -42,7 +42,8 @@ header {
 .phone-icon-bottom {
     position: absolute;
     bottom: 1rem;
-    right: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .phone-icon-bottom img {
@@ -50,8 +51,6 @@ header {
     height: 60px;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    background: white;
-    padding: 6px;
     transition: transform 0.3s ease;
 }
 
@@ -174,7 +173,6 @@ footer {
 .brush-icon img {
     width: 80px;
     height: 80px;
-    filter: brightness(0) invert(1);
     opacity: 0.8;
     transition: all 0.3s ease;
 }
@@ -309,7 +307,8 @@ footer {
     
     .phone-icon-bottom {
         bottom: 0.5rem;
-        right: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
     }
     
     .phone-icon-bottom img {
@@ -351,7 +350,8 @@ footer {
     
     .phone-icon-bottom {
         bottom: 0.3rem;
-        right: 0.3rem;
+        left: 50%;
+        transform: translateX(-50%);
     }
     
     .phone-icon-bottom img {
