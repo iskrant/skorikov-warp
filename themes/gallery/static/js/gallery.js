@@ -63,6 +63,13 @@ class Gallery {
                     break;
             }
         });
+        
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            if (this.lightbox.classList.contains('active')) {
+                this.scaleImage();
+            }
+        });
     }
     
     setupTouchEvents() {
@@ -105,11 +112,8 @@ class Gallery {
         this.lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Reset image styles for proper scaling
-        this.lightboxImage.style.maxWidth = '100%';
-        this.lightboxImage.style.maxHeight = '100%';
-        this.lightboxImage.style.width = 'auto';
-        this.lightboxImage.style.height = 'auto';
+        // Smart scaling for images
+        this.scaleImage();
         
         // Preload adjacent images
         this.preloadAdjacentImages();
@@ -124,11 +128,8 @@ class Gallery {
         this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.images.length - 1;
         this.lightboxImage.src = this.images[this.currentIndex];
         
-        // Reset image styles for proper scaling
-        this.lightboxImage.style.maxWidth = '100%';
-        this.lightboxImage.style.maxHeight = '100%';
-        this.lightboxImage.style.width = 'auto';
-        this.lightboxImage.style.height = 'auto';
+        // Smart scaling for images
+        this.scaleImage();
         
         this.preloadAdjacentImages();
     }
@@ -137,13 +138,32 @@ class Gallery {
         this.currentIndex = this.currentIndex < this.images.length - 1 ? this.currentIndex + 1 : 0;
         this.lightboxImage.src = this.images[this.currentIndex];
         
-        // Reset image styles for proper scaling
+        // Smart scaling for images
+        this.scaleImage();
+        
+        this.preloadAdjacentImages();
+    }
+    
+    scaleImage() {
+        // Reset styles first
         this.lightboxImage.style.maxWidth = '100%';
         this.lightboxImage.style.maxHeight = '100%';
         this.lightboxImage.style.width = 'auto';
         this.lightboxImage.style.height = 'auto';
         
-        this.preloadAdjacentImages();
+        // Wait for image to load and then apply smart scaling
+        this.lightboxImage.onload = () => {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const padding = 120; // 3rem * 2 sides + navigation space
+            
+            const maxWidth = viewportWidth - padding;
+            const maxHeight = viewportHeight - padding;
+            
+            // Apply constraints to ensure image fits in viewport
+            this.lightboxImage.style.maxWidth = `${maxWidth}px`;
+            this.lightboxImage.style.maxHeight = `${maxHeight}px`;
+        };
     }
     
     preloadAdjacentImages() {

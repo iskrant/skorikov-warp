@@ -224,12 +224,13 @@ footer {
 
 .lightbox-content {
     position: relative;
-    max-width: 95%;
-    max-height: 95%;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 3rem;
+    box-sizing: border-box;
 }
 
 .lightbox-content img {
@@ -299,8 +300,6 @@ footer {
     }
     
     .lightbox-content {
-        max-width: 98%;
-        max-height: 98%;
         padding: 1rem;
     }
     
