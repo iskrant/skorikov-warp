@@ -14,11 +14,20 @@
 
 ## Установка и настройка
 
-### 1. Клонирование репозитория
+### 1. Создание репозитория на GitHub
+
+1. Создайте новый публичный репозиторий на GitHub (например, `skorikov-gallery`)
+2. Не добавляйте README, .gitignore или лицензию при создании
+
+### 2. Загрузка кода
+
+Загрузите этот код в ваш репозиторий:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/skorikov-gallery.git
-cd skorikov-gallery
+cd /путь/к/этой/папке
+git remote add origin https://github.com/YOUR_USERNAME/skorikov-gallery.git
+git branch -M main
+git push -u origin main
 ```
 
 ### 2. Установка Hugo
