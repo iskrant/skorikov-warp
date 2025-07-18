@@ -31,9 +31,14 @@ class Gallery {
     bindEvents() {
         // Close lightbox when clicking outside image
         this.lightbox.addEventListener('click', (e) => {
-            if (e.target === this.lightbox) {
+            if (e.target === this.lightbox || e.target.classList.contains('lightbox-content')) {
                 this.closeLightbox();
             }
+        });
+        
+        // Prevent closing when clicking on the image itself
+        this.lightboxImage.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
         
         // Navigation buttons
