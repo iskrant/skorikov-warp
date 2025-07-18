@@ -9,6 +9,14 @@
 </head>
 <body>
     <header>
+        <div class="header-icons">
+            <div class="qr-code">
+                <img src="{{ "images/qr.png" | relURL }}" alt="QR код">
+            </div>
+            <div class="phone-icon">
+                <img src="{{ "images/tel.png" | relURL }}" alt="Телефон">
+            </div>
+        </div>
         <div class="artist-info">
             <h1>{{ .Site.Params.artist_name }}</h1>
             <p>{{ .Site.Params.artist_title }}</p>
@@ -23,6 +31,18 @@
     <main>
         {{ block "main" . }}{{ end }}
     </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="brush-icon">
+                <img src="{{ "images/brush.png" | relURL }}" alt="Кисть художника">
+            </div>
+            <div class="footer-text">
+                <p>&copy; {{ now.Format "2006" }} {{ .Site.Params.artist_name }}</p>
+                <p>Творчество с душой</p>
+            </div>
+        </div>
+    </footer>
     
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
