@@ -144,13 +144,37 @@ document.addEventListener('DOMContentLoaded', () => {
     new Gallery();
 });
 
-// Add loading animation
+// Add loading animation and masonry enhancement
 document.addEventListener('DOMContentLoaded', () => {
     const images = document.querySelectorAll('.gallery-item img');
+    const container = document.querySelector('.gallery-container');
     
+    // Enhanced masonry layout
+    function initMasonry() {
+        if (window.innerWidth > 768) {
+            // For desktop, ensure proper column breaks
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                item.style.breakInside = 'avoid';
+                item.style.pageBreakInside = 'avoid';
+            });
+        }
+    }
+    
+    // Initialize masonry
+    initMasonry();
+    
+    // Re-initialize on window resize
+    window.addEventListener('resize', initMasonry);
+    
+    // Image loading
     images.forEach(img => {
         img.addEventListener('load', () => {
             img.style.opacity = '1';
+            // Trigger masonry recalculation after image load
+            setTimeout(() => {
+                initMasonry();
+            }, 10);
         });
     });
 });

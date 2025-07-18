@@ -3,7 +3,7 @@
     {{ $images := resources.Match "images/*.{jpg,jpeg,png,gif,webp,JPG,JPEG,PNG,GIF,WEBP}" }}
     {{ if $images }}
         {{ range $index, $image := $images }}
-            {{ $thumb := $image.Fit "400x400 q85" }}
+            {{ $thumb := $image.Resize "300x q85" }}
             <div class="gallery-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}">
                 <img src="{{ $thumb.RelPermalink }}" alt="Картина {{ add $index 1 }}" loading="lazy">
             </div>
