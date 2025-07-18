@@ -15,6 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 
+
 defaults:
   run:
     shell: bash
@@ -26,8 +27,10 @@ jobs:
       HUGO_VERSION: 0.148.0
     steps:
       - name: Checkout repository
-        run: |
-          git clone --depth=1 ${{ github.server_url }}/${{ github.repository }}.git .
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Install Hugo CLI
         run: |
@@ -47,6 +50,9 @@ jobs:
           # Configure git
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Configure remote URL with token
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
           # Create gh-pages branch if it doesn't exist
           git checkout --orphan gh-pages
