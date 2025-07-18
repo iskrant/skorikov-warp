@@ -112,7 +112,7 @@ hugo server -D
   artist_title = "Член союза художников России"
   phone = "+79081234567"
   email = "skorikov.igor@gmail.com"
-  telegram = "@skorikoviii"
+  telegram = "@Igor_Skorikov"
 ```
 
 ## Управление галереей

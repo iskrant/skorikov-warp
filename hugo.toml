@@ -6,9 +6,9 @@ theme = 'gallery'
 [params]
   artist_name = "Скориков Игорь Андреевич"
   artist_title = "Член союза художников России"
-  phone = "+79081234567"
+  phone = "https://vk.com/igorandreev12345"
   email = "skorikov.igor@gmail.com"
-  telegram = "@skorikoviii"
+  telegram = "@Igor_Skorikov"
 
 [imaging]
   quality = 85

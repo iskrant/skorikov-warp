@@ -10,4 +10,4 @@ type: "gallery"
 **Контакты:**
 - Телефон: +79081234567
 - Email: skorikov.igor@gmail.com
-- Telegram: @skorikoviii
+- Telegram: @Igor_Skorikov
