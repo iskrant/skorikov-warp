@@ -8,6 +8,6 @@ type: "gallery"
 Член союза художников России
 
 **Контакты:**
-- Телефон: +79081234567
+- VK: https://vk.com/igorandreev12345
 - Email: skorikov.igor@gmail.com
 - Telegram: @Igor_Skorikov

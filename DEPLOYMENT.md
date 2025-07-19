@@ -81,7 +81,7 @@ git push origin main
 [params]
   artist_name = "Скориков Игорь Андреевич"
   artist_title = "Член союза художников России"
-  phone = "+79081234567"
+  vk = "https://vk.com/igorandreev12345"
   email = "skorikov.igor@gmail.com"
   telegram = "@Igor_Skorikov"
 ```

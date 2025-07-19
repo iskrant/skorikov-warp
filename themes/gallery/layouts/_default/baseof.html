@@ -16,7 +16,7 @@
             <h1>{{ .Site.Params.artist_name }}</h1>
             <p>{{ .Site.Params.artist_title }}</p>
             <div class="contacts">
-                <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a>
+                <a href="{{ .Site.Params.vk }}" target="_blank">VK: igorandreev12345</a>
                 <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a>
                 <a href="https://t.me/{{ strings.TrimPrefix "@" .Site.Params.telegram }}" target="_blank">{{ .Site.Params.telegram }}</a>
             </div>
