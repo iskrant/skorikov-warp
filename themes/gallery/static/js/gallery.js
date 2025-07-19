@@ -38,6 +38,10 @@ class Gallery {
         });
     }
     
+    isZoomed() {
+        return this.scale > 1;
+    }
+    
     bindEvents() {
         // Close lightbox when clicking outside image
         this.lightbox.addEventListener('click', (e) => {
@@ -97,12 +101,14 @@ class Gallery {
         this.lightbox.addEventListener('touchstart', (e) => {
             startTouches = e.touches.length;
             touchStartTime = Date.now();
+            this.mode = this.isZoomed() ? 'pan' : 'swipe';
+            isPanning = false;
+            isPinching = false;
             
 if (startTouches === 1) {
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
     hasMoved = false;
-    isPinching = false;
 } else if (startTouches === 2) {
     // Pinch-to-zoom initialization
     initialDistance = getDistance(e.touches);
@@ -114,44 +120,62 @@ if (startTouches === 1) {
         });
         
         this.lightbox.addEventListener('touchmove', (e) => {
-            if (startTouches === 2 && e.touches.length === 2 && isPinching) {
-                // Handle pinch zoom
+            if (this.mode === 'pan') {
+                // Always preventDefault in pan mode
                 e.preventDefault();
-                const newDistance = getDistance(e.touches);
-                this.scale = initialScale * (newDistance / initialDistance);
-                // Maintain pan position during zoom
-                this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
+                
+                if (startTouches === 2 && e.touches.length === 2 && isPinching) {
+                    // Handle pinch zoom
+                    const newDistance = getDistance(e.touches);
+                    this.scale = initialScale * (newDistance / initialDistance);
+                    this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
+                    return;
+                }
+                
+                if (startTouches === 1 && e.touches.length === 1) {
+                    // Handle single-finger pan
+                    const currentX = e.touches[0].clientX;
+                    const currentY = e.touches[0].clientY;
+                    this.panX = lastPanX + (currentX - startX);
+                    this.panY = lastPanY + (currentY - startY);
+                    this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
+                    isPanning = true;
+                }
                 return;
-            }
-
-            // Allow pan only if the image is zoomed
-            if (startTouches === 1 && this.scale > 1) {
-                e.preventDefault();
-                const currentX = e.touches[0].clientX;
-                const currentY = e.touches[0].clientY;
-                this.panX = lastPanX + (currentX - startX);
-                this.panY = lastPanY + (currentY - startY);
-                this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
-                isPanning = true;
-                return;
-            } else {
-                isPanning = false;
             }
             
-            if (startTouches === 1 && e.touches.length === 1) {
-                const currentX = e.touches[0].clientX;
-                const currentY = e.touches[0].clientY;
-                const moveDistance = Math.sqrt(
-                    Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2)
-                );
-                
-                if (moveDistance > 10) {
-                    hasMoved = true;
+            if (this.mode === 'swipe') {
+                // Handle swipe mode - only track movement for threshold detection
+                if (startTouches === 1 && e.touches.length === 1) {
+                    const currentX = e.touches[0].clientX;
+                    const currentY = e.touches[0].clientY;
+                    const moveDistance = Math.sqrt(
+                        Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2)
+                    );
+                    
+                    // Set isPanning = true as soon as movement exceeds 5-10 px threshold
+                    // This suppresses swipe detection for any dragging motion
+                    if (moveDistance > 7) {
+                        isPanning = true;
+                    }
+                    
+                    // Only mark as moved if exceeds swipe threshold
+                    if (moveDistance > 10) {
+                        hasMoved = true;
+                    }
                 }
+                // Do NOT modify panX/panY in swipe mode
             }
         });
         
         this.lightbox.addEventListener('touchend', (e) => {
+            if (this.mode === 'pan') {
+                // Finish panning: store lastPanX/Y, keep scale; DO NOT enter swipe code.
+                lastPanX = this.panX;
+                lastPanY = this.panY;
+                return;
+            }
+            
 // If the gesture started as multi-touch (pinch) or detected as pinching, handle end of pinch
 if (startTouches >= 2 || isPinching) {
     // Persist the final scale and pan position
@@ -170,8 +194,9 @@ if (isPanning) {
     return;
 }
             
-            // Only process single-touch gestures when image is not zoomed (scale = 1)
-            if (startTouches === 1 && e.changedTouches.length === 1 && this.scale <= 1) {
+            // Only process swipe gestures in swipe mode AND if not panning
+            // isPanning = true suppresses swipe detection entirely (double safety net)
+            if (this.mode === 'swipe' && startTouches === 1 && e.changedTouches.length === 1 && !isPanning) {
                 endX = e.changedTouches[0].clientX;
                 endY = e.changedTouches[0].clientY;
                 
@@ -254,6 +279,8 @@ if (isPanning) {
         this.scale = 1;
         this.panX = 0;
         this.panY = 0;
+        // Clear mode to ensure next open starts in normal mode
+        this.mode = 'swipe';
     }
     
     showPrevious() {
