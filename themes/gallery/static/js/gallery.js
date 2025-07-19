@@ -5,6 +5,7 @@ class Gallery {
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.currentIndex = 0;
         this.images = [];
+        this.lightboxTitle = null; // Will be created when lightbox opens
         
         this.init();
     }
@@ -18,7 +19,13 @@ class Gallery {
     collectImages() {
         this.galleryItems.forEach((item, index) => {
             const fullImage = item.getAttribute('data-full');
-            this.images.push(fullImage);
+            const title = item.getAttribute('data-title') || '';
+            
+            // Store both image source and title for quick access
+            this.images.push({
+                src: fullImage,
+                title: Gallery.cleanFilenameToTitle(title)
+            });
             
             item.addEventListener('click', () => {
                 this.openLightbox(index);
@@ -103,9 +110,12 @@ class Gallery {
     
     openLightbox(index) {
         this.currentIndex = index;
-        this.lightboxImage.src = this.images[index];
+        this.lightboxImage.src = this.images[index].src;
         this.lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        // Create or update title element
+        this.createOrUpdateTitle();
         
         // Smart scaling for images
         this.scaleImage();
@@ -121,7 +131,10 @@ class Gallery {
     
     showPrevious() {
         this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.images.length - 1;
-        this.lightboxImage.src = this.images[this.currentIndex];
+        this.lightboxImage.src = this.images[this.currentIndex].src;
+        
+        // Update title for new image
+        this.updateTitle();
         
         // Smart scaling for images
         this.scaleImage();
@@ -131,7 +144,10 @@ class Gallery {
     
     showNext() {
         this.currentIndex = this.currentIndex < this.images.length - 1 ? this.currentIndex + 1 : 0;
-        this.lightboxImage.src = this.images[this.currentIndex];
+        this.lightboxImage.src = this.images[this.currentIndex].src;
+        
+        // Update title for new image
+        this.updateTitle();
         
         // Smart scaling for images
         this.scaleImage();
@@ -169,8 +185,81 @@ class Gallery {
         
         preloadIndices.forEach(index => {
             const img = new Image();
-            img.src = this.images[index];
+            img.src = this.images[index].src;
         });
+    }
+    
+    /**
+     * Creates the title element if it doesn't exist, or updates it if it does
+     */
+    createOrUpdateTitle() {
+        if (!this.lightboxTitle) {
+            // Create the title element
+            this.lightboxTitle = document.createElement('div');
+            this.lightboxTitle.className = 'lightbox-title';
+            
+            // Insert it after the image container in the lightbox-content
+            const lightboxContent = this.lightbox.querySelector('.lightbox-content');
+            lightboxContent.appendChild(this.lightboxTitle);
+        }
+        
+        // Update the title text
+        this.updateTitle();
+    }
+    
+    /**
+     * Updates the title text based on the current image
+     */
+    updateTitle() {
+        if (this.lightboxTitle) {
+            // Use the pre-cleaned title from the slides array for quick access
+            const currentImage = this.images[this.currentIndex];
+            this.lightboxTitle.textContent = currentImage.title;
+        }
+    }
+    
+    /**
+     * Extracts filename from URL
+     * @param {string} url - The image URL
+     * @returns {string} - The filename
+     */
+    extractFilenameFromUrl(url) {
+        if (!url) return '';
+        // Handle URL-encoded characters and extract filename
+        const decodedUrl = decodeURIComponent(url);
+        const parts = decodedUrl.split('/');
+        return parts[parts.length - 1] || '';
+    }
+    
+    /**
+     * Utility function to clean filenames into human-readable titles
+     * @param {string} filename - The filename to clean
+     * @returns {string} - The cleaned, human-readable title
+     */
+    static cleanFilenameToTitle(filename) {
+        if (!filename) return '';
+        
+        let title = filename;
+        
+        // Remove /images/ prefix from the path
+        title = title.replace(/^\/?images\//i, '');
+        
+        // Remove file extension (.jpg, .JPG, etc.)
+        title = title.replace(/\.\w+$/, '');
+        
+        // Remove size patterns like '90х110', '74х64' at the end
+        title = title.replace(/\s+\d+х\d+$/i, '');
+        
+        // Remove underscores and replace with spaces
+        title = title.replace(/_/g, ' ');
+        
+        // Remove LIS prefix (after underscores converted to spaces)
+        title = title.replace(/^LIS\s+/i, '');
+        
+        // Clean up extra whitespace
+        title = title.replace(/\s+/g, ' ').trim();
+        
+        return title;
     }
 }
 

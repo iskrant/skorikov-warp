@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title Cleaning Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #37393a; color: #e0e0e0; }
+        .test { margin: 10px 0; padding: 10px; background: #4a4c4d; border-radius: 4px; }
+        .original { color: #ccc; font-size: 0.9em; }
+        .cleaned { color: #90ee90; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Gallery Title Cleaning Test</h1>
+    <div id="tests"></div>
+
+    <script>
+        // Copy the cleanFilenameToTitle function from gallery.js
+        function cleanFilenameToTitle(filename) {
+            if (!filename) return '';
+            
+            let title = filename;
+            
+            // Remove file extension (.jpg, .JPG, etc.)
+            title = title.replace(/\.\w+$/, '');
+            
+            // Remove size patterns like '90х110', '74х64' at the end
+            title = title.replace(/\s+\d+х\d+$/i, '');
+            
+            // Remove underscores and replace with spaces
+            title = title.replace(/_/g, ' ');
+            
+            // Remove LIS prefix (after underscores converted to spaces)
+            title = title.replace(/^LIS\s+/i, '');
+            
+            // Clean up extra whitespace
+            title = title.replace(/\s+/g, ' ').trim();
+            
+            return title;
+        }
+
+        // Test cases
+        const testCases = [
+            '/images/LIS_3580.JPG',
+            '/images/LIS_3583-2.jpg',
+            '/images/Август 90х110.jpg',
+            '/images/Автопортрет 74х64.jpg',
+            '/images/Белое утро 90х110.jpg',
+            '/images/гранаты 54х54.jpg',
+            '/images/калина красная 78х64.jpg',
+            '/images/МОНОЛОГ 90х105.jpg',
+            '/images/110х120.jpg',
+            '/images/Разнотравье .jpg',
+        ];
+
+        const testsDiv = document.getElementById('tests');
+
+        testCases.forEach(testCase => {
+            const cleaned = cleanFilenameToTitle(testCase);
+            const testDiv = document.createElement('div');
+            testDiv.className = 'test';
+            testDiv.innerHTML = `
+                <div class="original">Original: ${testCase}</div>
+                <div class="cleaned">Cleaned: "${cleaned}"</div>
+            `;
+            testsDiv.appendChild(testDiv);
+        });
+    </script>
+</body>
+</html>

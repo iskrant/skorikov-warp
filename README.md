@@ -147,3 +147,37 @@ hugo server -D
 ## Поддержка
 
 По вопросам использования обращайтесь к разработчику.
+
+### Filename Conventions
+
+Images should be placed in the `assets/images/` directory. The supported formats are JPG, JPEG, PNG, GIF, and WEBP. The filenames are used to generate image titles, with extensions stripped using a regex pattern.
+
+**Example Filename:**
+
+- `painting1.jpg` will be displayed with the title `painting1`.
+
+### Regex Logic
+
+- A regex pattern is used in the `gallery.html` layout to strip the extension from filenames: 
+   ```go
+   {{ $image.Name | replaceRE "\\.(jpg|png|jpeg)$" "" }}
+   ```
+   This pattern removes common image file extensions.
+
+### Disabling Titles
+
+If you wish to disable titles, modify the HTML data attribute in the `gallery.html` file by removing or commenting out `data-title`.
+
+**Instructions:**
+
+1. Open the `gallery.html` file located at:
+   - `themes/gallery/layouts/_default/gallery.html`
+
+2. Locate the line with `data-title`:
+   ```html
+   <div class="gallery-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}" data-title="{{ $image.Name | replaceRE "\\.(jpg|png|jpeg)$" "" }}">
+   ```
+
+3. Remove or comment out the `data-title` segment to disable titles.
+
+4. Save the file and rebuild your project.

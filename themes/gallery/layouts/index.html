@@ -4,7 +4,7 @@
     {{ if $images }}
         {{ range $index, $image := $images }}
             {{ $thumb := $image.Resize "300x q85" }}
-            <div class="gallery-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}">
+            <div class="gallery-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}" data-title="{{ $image.Name }}">
                 <img src="{{ $thumb.RelPermalink }}" alt="Картина {{ add $index 1 }}" loading="lazy">
             </div>
         {{ end }}
