@@ -11,6 +11,8 @@ This Hugo theme creates a responsive gallery with automatic title generation fro
 - 🌍 **UTF-8 Support** - Full support for Cyrillic and other Unicode characters
 - 📱 **Mobile Responsive** - Adaptive layouts for all screen sizes
 - ⚡ **Performance Optimized** - Pre-cleaned titles for fast navigation
+- 👆 **Enhanced Touch Gestures** - Swipe up/down to close, pinch-to-zoom, improved overlay interaction
+- 🔧 **Robust Event Handling** - Fixed overlay click passthrough and gesture conflicts
 
 ## Title Generation System
 
