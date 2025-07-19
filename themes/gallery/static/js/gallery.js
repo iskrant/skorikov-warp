@@ -160,9 +160,9 @@ class Gallery {
         this.lightboxImage.onload = () => {
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const padding = 120; // 3rem * 2 sides + navigation space
+            const padding = 32; // Минимальный отступ только сверху и снизу (1rem * 2)
             
-            const maxWidth = viewportWidth - padding;
+            const maxWidth = viewportWidth; // Используем всю ширину
             const maxHeight = viewportHeight - padding;
             
             // Apply constraints to ensure image fits in viewport

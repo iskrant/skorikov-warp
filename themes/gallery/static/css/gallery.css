@@ -229,7 +229,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3rem;
+    padding: 1rem 0;
     box-sizing: border-box;
 }
 
@@ -250,12 +250,13 @@ footer {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding: 0 1rem;
     pointer-events: none;
+    z-index: 10;
 }
 
 .nav-btn {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
     color: white;
     border: none;
     width: 50px;
@@ -266,10 +267,11 @@ footer {
     transition: all 0.3s ease;
     pointer-events: auto;
     backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.5);
     transform: scale(1.1);
 }
 
@@ -300,7 +302,7 @@ footer {
     }
 
     .lightbox-content {
-        padding: 1rem;
+        padding: 0.5rem 0;
     }
 
     .nav-btn {
