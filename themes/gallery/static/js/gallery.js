@@ -155,9 +155,9 @@ if (startTouches === 1) {
                         Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2)
                     );
                     
-                    // Set isPanning = true as soon as movement exceeds 5-10 px threshold
-                    // This suppresses swipe detection for any dragging motion
-                    if (moveDistance > 7) {
+                    // Set isPanning = true only for significant dragging (not swipe gestures)
+                    // This suppresses swipe detection only for actual dragging motions
+                    if (moveDistance > 30) {
                         isPanning = true;
                     }
                     
