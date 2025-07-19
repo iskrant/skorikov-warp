@@ -196,9 +196,9 @@ if (isPanning) {
     return;
 }
             
-            // Only process swipe gestures in swipe mode AND if not panning
+            // Only process swipe gestures when scale <= 1 AND if not panning
             // isPanning = true suppresses swipe detection entirely (double safety net)
-            if (this.mode === 'swipe' && startTouches === 1 && e.changedTouches.length === 1 && !isPanning && this.scale <= 1) {
+            if (startTouches === 1 && e.changedTouches.length === 1 && !isPanning && this.scale <= 1) {
                 endX = e.changedTouches[0].clientX;
                 endY = e.changedTouches[0].clientY;
                 
