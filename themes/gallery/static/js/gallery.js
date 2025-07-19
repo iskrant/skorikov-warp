@@ -79,31 +79,96 @@ class Gallery {
         let startY = 0;
         let endX = 0;
         let endY = 0;
+        let startTouches = 0;
+        let isPinching = false;
+        let hasMoved = false;
+        let touchStartTime = 0;
         
         this.lightbox.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
+            startTouches = e.touches.length;
+            touchStartTime = Date.now();
+            
+            if (startTouches === 1) {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                hasMoved = false;
+                isPinching = false;
+            } else if (startTouches >= 2) {
+                // Multi-touch detected, likely pinch-to-zoom
+                isPinching = true;
+                // Prevent default browser zoom behavior
+                e.preventDefault();
+            }
+        });
+        
+        this.lightbox.addEventListener('touchmove', (e) => {
+            if (startTouches >= 2) {
+                // Multi-touch, prevent default zoom
+                e.preventDefault();
+                return;
+            }
+            
+            if (startTouches === 1 && e.touches.length === 1) {
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const moveDistance = Math.sqrt(
+                    Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2)
+                );
+                
+                if (moveDistance > 10) {
+                    hasMoved = true;
+                }
+            }
         });
         
         this.lightbox.addEventListener('touchend', (e) => {
-            endX = e.changedTouches[0].clientX;
-            endY = e.changedTouches[0].clientY;
-            
-            const deltaX = endX - startX;
-            const deltaY = endY - startY;
-            const minSwipeDistance = 50;
-            
-            // Horizontal swipe
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
-                if (deltaX > 0) {
-                    this.showPrevious(); // Swipe right
-                } else {
-                    this.showNext(); // Swipe left
-                }
+            // If the gesture started as multi-touch or was detected as pinching, ignore it
+            if (startTouches >= 2 || isPinching) {
+                return;
             }
-            // Vertical swipe down
-            else if (deltaY > minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
-                this.closeLightbox(); // Swipe down
+            
+            // Only process single-touch gestures
+            if (startTouches === 1 && e.changedTouches.length === 1) {
+                endX = e.changedTouches[0].clientX;
+                endY = e.changedTouches[0].clientY;
+                
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+                const touchDuration = Date.now() - touchStartTime;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                
+                // Distinguish between tap and swipe based on movement and duration
+                const isQuickTap = touchDuration < 300 && distance < 20;
+                
+                if (isQuickTap) {
+                    // Handle tap
+                    const target = e.target;
+                    if (target === this.lightbox || target.classList.contains('lightbox-content')) {
+                        // Tap outside image - close lightbox
+                        this.closeLightbox();
+                    } else if (target === this.lightboxImage || target.closest('#lightbox-image')) {
+                        // Tap on image - navigate
+                        const rect = this.lightboxImage.getBoundingClientRect();
+                        const tapX = endX - rect.left;
+                        tapX < rect.width / 2 ? this.showPrevious() : this.showNext();
+                    }
+                } else if (hasMoved && distance > 80) {
+                    // Handle swipe (increased threshold for more deliberate gestures)
+                    const minSwipeDistance = 80;
+                    
+                    // Horizontal swipe
+                    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                        if (deltaX > 0) {
+                            this.showPrevious(); // Swipe right
+                        } else {
+                            this.showNext(); // Swipe left
+                        }
+                    }
+                    // Vertical swipe down
+                    else if (deltaY > minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
+                        this.closeLightbox(); // Swipe down
+                    }
+                }
             }
         });
     }
