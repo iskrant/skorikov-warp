@@ -51,6 +51,19 @@ class Gallery {
             }
         });
         
+        // Prevent event propagation on lightbox to stop mobile touch passthrough
+        this.lightbox.addEventListener('touchstart', (e) => {
+            if (e.target === this.lightbox || e.target.classList.contains('lightbox-content')) {
+                e.stopPropagation();
+            }
+        }, { passive: false });
+        
+        this.lightbox.addEventListener('touchend', (e) => {
+            if (e.target === this.lightbox || e.target.classList.contains('lightbox-content')) {
+                e.stopPropagation();
+            }
+        }, { passive: false });
+        
         // Image click navigation
         this.lightboxImage.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -268,6 +281,7 @@ if (isPanning) {
         this.lightboxImage.src = this.images[index].src;
         this.lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
+        document.body.classList.add('lightbox-active'); // Disable gallery interactions
         
         // Create or update title element
         this.createOrUpdateTitle();
@@ -282,6 +296,7 @@ if (isPanning) {
     closeLightbox() {
         this.lightbox.classList.remove('active');
         document.body.style.overflow = '';
+        document.body.classList.remove('lightbox-active'); // Re-enable gallery interactions
         // Reset transform when closing lightbox
         this.lightboxImage.style.transform = 'scale(1)';
         // Reset zoom and pan state
