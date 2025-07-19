@@ -229,7 +229,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -244,39 +244,19 @@ footer {
 }
 
 .lightbox-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 1rem;
-    pointer-events: none;
-    z-index: 10;
+    display: none;
 }
 
 .nav-btn {
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    pointer-events: auto;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: none;
 }
 
 .nav-btn:hover {
-    background: rgba(0, 0, 0, 0.5);
-    transform: scale(1.1);
+    display: none;
 }
 
 .nav-btn:active {
-    transform: scale(0.95);
+    display: none;
 }
 
 /* Mobile responsive */
@@ -298,17 +278,15 @@ footer {
     }
 
     .lightbox-nav {
-        padding: 0 1rem;
+        display: none;
     }
 
     .lightbox-content {
-        padding: 0.5rem 0;
+        padding: 0;
     }
 
     .nav-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
+        display: none;
     }
 
     .qr-code-center {

@@ -2,8 +2,6 @@ class Gallery {
     constructor() {
         this.lightbox = document.getElementById('lightbox');
         this.lightboxImage = document.getElementById('lightbox-image');
-        this.prevBtn = document.getElementById('prev-btn');
-        this.nextBtn = document.getElementById('next-btn');
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.currentIndex = 0;
         this.images = [];
@@ -36,20 +34,12 @@ class Gallery {
             }
         });
         
-        // Prevent closing when clicking on the image itself
+        // Image click navigation
         this.lightboxImage.addEventListener('click', (e) => {
             e.stopPropagation();
-        });
-        
-        // Navigation buttons
-        this.prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.showPrevious();
-        });
-        
-        this.nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.showNext();
+            const rect = this.lightboxImage.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            clickX < rect.width / 2 ? this.showPrevious() : this.showNext();
         });
         
         // Keyboard navigation
