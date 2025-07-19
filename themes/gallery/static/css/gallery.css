@@ -158,6 +158,12 @@ main {
     font-family: 'Courier New', monospace;
 }
 
+.artist-bio {
+    font-size: 0.8rem;
+    color: #b0b0b0;
+    margin-top: 1rem;
+}
+
 /* Footer */
 footer {
     background: linear-gradient(135deg, #000000 0%, #37393a 100%);
@@ -337,6 +343,11 @@ footer {
     .lightbox-title {
         font-size: 0.9rem;
     }
+
+    .artist-bio {
+        font-size: 0.75rem;
+        margin-top: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -378,6 +389,11 @@ footer {
 
     .footer-text p {
         font-size: 1rem;
+    }
+
+    .artist-bio {
+        font-size: 0.7rem;
+        margin-top: 0.6rem;
     }
     
 }
