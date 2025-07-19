@@ -18,8 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Touch Event Handling**: Improved touch event processing to prevent conflicts between different gestures
 - **Mobile Responsiveness**: Enhanced touch interaction reliability across different mobile browsers
 
+### Fixed
+- **Touch Navigation During Zoom**: Fixed issue where swipe navigation would interfere with image zooming on mobile devices
+- **Passive Event Listeners**: Resolved browser console warnings about passive event listeners for better performance
+- **Touch Gesture Conflicts**: Improved gesture handling to prevent conflicts between zoom and swipe navigation
+
 ### Technical
 - Added comprehensive touch gesture detection system
 - Implemented proper event handling for zoom and swipe gestures
 - Added gesture validation to prevent accidental triggers
 - Improved overlay click detection and handling
+- Enabled swipe navigation only when image scale is less than 1 (not zoomed)
+- Added passive event listener options for better scroll performance

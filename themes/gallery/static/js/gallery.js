@@ -11,6 +11,7 @@ class Gallery {
         this.scale = 1;
         this.panX = 0;
         this.panY = 0;
+        this.mode = 'swipe'; // Режим touch-жестов: 'swipe', 'pan', 'pinch'
         
         this.init();
     }
@@ -101,23 +102,25 @@ class Gallery {
         this.lightbox.addEventListener('touchstart', (e) => {
             startTouches = e.touches.length;
             touchStartTime = Date.now();
-            this.mode = this.isZoomed() ? 'pan' : 'swipe';
             isPanning = false;
             isPinching = false;
             
-if (startTouches === 1) {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    hasMoved = false;
-} else if (startTouches === 2) {
-    // Pinch-to-zoom initialization
-    initialDistance = getDistance(e.touches);
-    initialScale = this.scale;
-    isPinching = true;
-    // Prevent default browser zoom behavior
-    e.preventDefault();
-}
-        });
+            // Правильное переключение режимов
+            if (startTouches === 1) {
+                this.mode = this.scale > 1 ? 'pan' : 'swipe';
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                hasMoved = false;
+            } else if (startTouches === 2) {
+                // Pinch-to-zoom initialization
+                this.mode = 'pinch';
+                initialDistance = getDistance(e.touches);
+                initialScale = this.scale;
+                isPinching = true;
+                // Prevent default browser zoom behavior only for two-finger touches
+                e.preventDefault();
+            }
+        }, { passive: false });
         
         this.lightbox.addEventListener('touchmove', (e) => {
             // Handle pinch-to-zoom FIRST, regardless of mode
@@ -126,6 +129,8 @@ if (startTouches === 1) {
                 e.preventDefault();
                 const newDistance = getDistance(e.touches);
                 this.scale = initialScale * (newDistance / initialDistance);
+                // Нормализация масштаба в диапазоне 0.5-3
+                this.scale = Math.min(3, Math.max(0.5, this.scale));
                 this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
                 return;
             }
@@ -168,7 +173,7 @@ if (startTouches === 1) {
                 }
                 // Do NOT modify panX/panY in swipe mode
             }
-        });
+        }, { passive: false });
         
         this.lightbox.addEventListener('touchend', (e) => {
             if (this.mode === 'pan') {
@@ -180,6 +185,8 @@ if (startTouches === 1) {
             
 // If the gesture started as multi-touch (pinch) or detected as pinching, handle end of pinch
 if (startTouches >= 2 || isPinching) {
+    // Нормализация масштаба при завершении pinch
+    this.scale = Math.min(3, Math.max(0.5, this.scale));
     // Persist the final scale and pan position
     initialScale = this.scale;
     lastPanX = this.panX;
@@ -197,7 +204,7 @@ if (isPanning) {
 }
             
             // Only process swipe gestures when scale <= 1 AND if not panning
-            // isPanning = true suppresses swipe detection entirely (double safety net)
+            // При scale > 1 режим pan блокирует свайп-навигацию
             if (startTouches === 1 && e.changedTouches.length === 1 && !isPanning && this.scale <= 1) {
                 endX = e.changedTouches[0].clientX;
                 endY = e.changedTouches[0].clientY;
@@ -244,9 +251,9 @@ if (isPanning) {
                     }
                 }
             }
-        });
+        }, { passive: false });
         
-        // Utility function to calculate distance between two touch points
+// Apply conditions to ensure navigation works correctly at different scales
         function getDistance(touches) {
             const touch1 = touches[0];
             const touch2 = touches[1];
