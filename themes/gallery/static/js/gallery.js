@@ -75,38 +75,46 @@ class Gallery {
     }
     
     setupTouchEvents() {
-        let startX = 0;
-        let startY = 0;
-        let endX = 0;
-        let endY = 0;
-        let startTouches = 0;
-        let isPinching = false;
-        let hasMoved = false;
-        let touchStartTime = 0;
+let startX = 0;
+let startY = 0;
+let endX = 0;
+let endY = 0;
+let startTouches = 0;
+let initialDistance = 0;
+let initialScale = 1;
+let scale = 1;
+let isPinching = false;
+let hasMoved = false;
+let touchStartTime = 0;
         
         this.lightbox.addEventListener('touchstart', (e) => {
             startTouches = e.touches.length;
             touchStartTime = Date.now();
             
-            if (startTouches === 1) {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                hasMoved = false;
-                isPinching = false;
-            } else if (startTouches >= 2) {
-                // Multi-touch detected, likely pinch-to-zoom
-                isPinching = true;
-                // Prevent default browser zoom behavior
-                e.preventDefault();
-            }
+if (startTouches === 1) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    hasMoved = false;
+    isPinching = false;
+} else if (startTouches === 2) {
+    // Pinch-to-zoom initialization
+    initialDistance = getDistance(e.touches);
+    initialScale = scale;
+    isPinching = true;
+    // Prevent default browser zoom behavior
+    e.preventDefault();
+}
         });
         
         this.lightbox.addEventListener('touchmove', (e) => {
-            if (startTouches >= 2) {
-                // Multi-touch, prevent default zoom
-                e.preventDefault();
-                return;
-            }
+if (startTouches === 2 && e.touches.length === 2 && isPinching) {
+    // Handle pinch zoom
+    e.preventDefault();
+    const newDistance = getDistance(e.touches);
+    scale = initialScale * (newDistance / initialDistance);
+    this.lightboxImage.style.transform = `scale(${scale})`;
+    return;
+}
             
             if (startTouches === 1 && e.touches.length === 1) {
                 const currentX = e.touches[0].clientX;
@@ -122,10 +130,13 @@ class Gallery {
         });
         
         this.lightbox.addEventListener('touchend', (e) => {
-            // If the gesture started as multi-touch or was detected as pinching, ignore it
-            if (startTouches >= 2 || isPinching) {
-                return;
-            }
+// If the gesture started as multi-touch (pinch) or detected as pinching, handle end of pinch
+if (startTouches >= 2 || isPinching) {
+    // Persist the final scale
+    initialScale = scale;
+    isPinching = false;
+    return;
+}
             
             // Only process single-touch gestures
             if (startTouches === 1 && e.changedTouches.length === 1) {
@@ -168,9 +179,22 @@ class Gallery {
                     else if (deltaY > minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
                         this.closeLightbox(); // Swipe down
                     }
+                    // Vertical swipe up
+                    else if (deltaY < -minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
+                        this.closeLightbox(); // Swipe up
+                    }
                 }
             }
         });
+        
+        // Utility function to calculate distance between two touch points
+        function getDistance(touches) {
+            const touch1 = touches[0];
+            const touch2 = touches[1];
+            const dx = touch1.clientX - touch2.clientX;
+            const dy = touch1.clientY - touch2.clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
     }
     
     openLightbox(index) {
@@ -192,6 +216,8 @@ class Gallery {
     closeLightbox() {
         this.lightbox.classList.remove('active');
         document.body.style.overflow = '';
+        // Reset transform when closing lightbox
+        this.lightboxImage.style.transform = 'scale(1)';
     }
     
     showPrevious() {
@@ -221,11 +247,12 @@ class Gallery {
     }
     
     scaleImage() {
-        // Reset styles first
+        // Reset styles and transform first
         this.lightboxImage.style.maxWidth = '100%';
         this.lightboxImage.style.maxHeight = '100%';
         this.lightboxImage.style.width = 'auto';
         this.lightboxImage.style.height = 'auto';
+        this.lightboxImage.style.transform = 'scale(1)';
         
         // Wait for image to load and then apply smart scaling
         this.lightboxImage.onload = () => {
