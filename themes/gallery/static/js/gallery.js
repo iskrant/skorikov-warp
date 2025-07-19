@@ -7,6 +7,11 @@ class Gallery {
         this.images = [];
         this.lightboxTitle = null; // Will be created when lightbox opens
         
+        // Touch/zoom state variables
+        this.scale = 1;
+        this.panX = 0;
+        this.panY = 0;
+        
         this.init();
     }
     
@@ -75,17 +80,19 @@ class Gallery {
     }
     
     setupTouchEvents() {
-let startX = 0;
-let startY = 0;
-let endX = 0;
-let endY = 0;
-let startTouches = 0;
-let initialDistance = 0;
-let initialScale = 1;
-let scale = 1;
-let isPinching = false;
-let hasMoved = false;
-let touchStartTime = 0;
+        let startX = 0;
+        let startY = 0;
+        let endX = 0;
+        let endY = 0;
+        let startTouches = 0;
+        let initialDistance = 0;
+        let initialScale = 1;
+        let isPinching = false;
+        let hasMoved = false;
+        let touchStartTime = 0;
+        let lastPanX = 0;
+        let lastPanY = 0;
+        let isPanning = false;
         
         this.lightbox.addEventListener('touchstart', (e) => {
             startTouches = e.touches.length;
@@ -99,7 +106,7 @@ if (startTouches === 1) {
 } else if (startTouches === 2) {
     // Pinch-to-zoom initialization
     initialDistance = getDistance(e.touches);
-    initialScale = scale;
+    initialScale = this.scale;
     isPinching = true;
     // Prevent default browser zoom behavior
     e.preventDefault();
@@ -107,14 +114,29 @@ if (startTouches === 1) {
         });
         
         this.lightbox.addEventListener('touchmove', (e) => {
-if (startTouches === 2 && e.touches.length === 2 && isPinching) {
-    // Handle pinch zoom
-    e.preventDefault();
-    const newDistance = getDistance(e.touches);
-    scale = initialScale * (newDistance / initialDistance);
-    this.lightboxImage.style.transform = `scale(${scale})`;
-    return;
-}
+            if (startTouches === 2 && e.touches.length === 2 && isPinching) {
+                // Handle pinch zoom
+                e.preventDefault();
+                const newDistance = getDistance(e.touches);
+                this.scale = initialScale * (newDistance / initialDistance);
+                // Maintain pan position during zoom
+                this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
+                return;
+            }
+
+            // Allow pan only if the image is zoomed
+            if (startTouches === 1 && this.scale > 1) {
+                e.preventDefault();
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                this.panX = lastPanX + (currentX - startX);
+                this.panY = lastPanY + (currentY - startY);
+                this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
+                isPanning = true;
+                return;
+            } else {
+                isPanning = false;
+            }
             
             if (startTouches === 1 && e.touches.length === 1) {
                 const currentX = e.touches[0].clientX;
@@ -132,14 +154,24 @@ if (startTouches === 2 && e.touches.length === 2 && isPinching) {
         this.lightbox.addEventListener('touchend', (e) => {
 // If the gesture started as multi-touch (pinch) or detected as pinching, handle end of pinch
 if (startTouches >= 2 || isPinching) {
-    // Persist the final scale
-    initialScale = scale;
+    // Persist the final scale and pan position
+    initialScale = this.scale;
+    lastPanX = this.panX;
+    lastPanY = this.panY;
     isPinching = false;
     return;
 }
+
+// Handle end of panning
+if (isPanning) {
+    lastPanX = this.panX;
+    lastPanY = this.panY;
+    isPanning = false;
+    return;
+}
             
-            // Only process single-touch gestures
-            if (startTouches === 1 && e.changedTouches.length === 1) {
+            // Only process single-touch gestures when image is not zoomed (scale = 1)
+            if (startTouches === 1 && e.changedTouches.length === 1 && this.scale <= 1) {
                 endX = e.changedTouches[0].clientX;
                 endY = e.changedTouches[0].clientY;
                 
@@ -218,6 +250,10 @@ if (startTouches >= 2 || isPinching) {
         document.body.style.overflow = '';
         // Reset transform when closing lightbox
         this.lightboxImage.style.transform = 'scale(1)';
+        // Reset zoom and pan state
+        this.scale = 1;
+        this.panX = 0;
+        this.panY = 0;
     }
     
     showPrevious() {
@@ -253,6 +289,11 @@ if (startTouches >= 2 || isPinching) {
         this.lightboxImage.style.width = 'auto';
         this.lightboxImage.style.height = 'auto';
         this.lightboxImage.style.transform = 'scale(1)';
+        
+        // Reset zoom and pan state
+        this.scale = 1;
+        this.panX = 0;
+        this.panY = 0;
         
         // Wait for image to load and then apply smart scaling
         this.lightboxImage.onload = () => {

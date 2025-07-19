@@ -41,7 +41,7 @@ header {
 
 .phone-icon-bottom {
     position: absolute;
-    bottom: -0.5rem;
+    bottom: -0.75rem;
     left: 50%;
     transform: translateX(-50%);
 }
