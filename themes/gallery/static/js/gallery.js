@@ -120,17 +120,19 @@ if (startTouches === 1) {
         });
         
         this.lightbox.addEventListener('touchmove', (e) => {
-            if (this.mode === 'pan') {
-                // Always preventDefault in pan mode
+            // Handle pinch-to-zoom FIRST, regardless of mode
+            if (startTouches === 2 && e.touches.length === 2 && isPinching) {
+                // Handle pinch zoom - works in both pan and swipe modes
                 e.preventDefault();
-                
-                if (startTouches === 2 && e.touches.length === 2 && isPinching) {
-                    // Handle pinch zoom
-                    const newDistance = getDistance(e.touches);
-                    this.scale = initialScale * (newDistance / initialDistance);
-                    this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
-                    return;
-                }
+                const newDistance = getDistance(e.touches);
+                this.scale = initialScale * (newDistance / initialDistance);
+                this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
+                return;
+            }
+            
+            if (this.mode === 'pan') {
+                // Always preventDefault in pan mode for single-finger gestures
+                e.preventDefault();
                 
                 if (startTouches === 1 && e.touches.length === 1) {
                     // Handle single-finger pan
