@@ -2,7 +2,7 @@ name: Deploy Skorikov Gallery to GitHub Pages
 
 on:
   push:
-    branches: ["main", "master"]
+    branches: ["main", "master", "test-watermark-workflow"]
   workflow_dispatch:
 
 permissions:
