@@ -49,7 +49,11 @@ jobs:
           mkdir -p "$BACKUP_DIR"
           find "$SOURCE_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | while read img; do
             cp "$img" "$BACKUP_DIR"/
-            convert "$img" \( "$WM_PATH" -alpha set -channel A -evaluate set ${WM_OPACITY}% \) -gravity SouthEast -geometry "$WM_GEOMETRY" -compose over -composite "$img"
+            # Get image width and calculate watermark size (1/10 of image width)
+            img_width=$(identify -ping -format "%w" "$img")
+            wm_width=$((img_width / 10))
+            # Apply watermark: resize to 1/10 width, preserve transparency, set opacity only for non-transparent pixels
+            convert "$img" \( "$WM_PATH" -resize "${wm_width}x" -alpha set -channel A -evaluate multiply ${WM_OPACITY}% +channel \) -gravity SouthEast -geometry "$WM_GEOMETRY" -compose over -composite "$img"
           done
 
       - name: Install Hugo CLI
