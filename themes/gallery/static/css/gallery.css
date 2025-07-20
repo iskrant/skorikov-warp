@@ -41,7 +41,7 @@ header {
 
 .phone-icon-bottom {
     position: absolute;
-    bottom: -0.75rem;
+    bottom: -1.5rem;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -52,10 +52,12 @@ header {
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
+    transform: scale(0.5333); /* уменьшение */
+
 }
 
 .phone-icon-bottom img:hover {
-    transform: scale(1.01);
+    transform: scale(0.58); /* увеличение при hover с учётом базового масштаба */
 }
 
 .artist-info h1 {
@@ -70,25 +72,59 @@ header {
     opacity: 0.9;
 }
 
-.contacts {
+.social-icons {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
 }
 
-.contacts a {
-    color: white;
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: rgba(255, 255, 255, 0.9);
+    background: transparent;
+    border-radius: 50%;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 25px;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.social-icon svg {
+    width: 24px;
+    height: 24px;
     transition: all 0.3s ease;
 }
 
-.contacts a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+/* Individual social media colors on hover */
+.vk-icon:hover {
+    background: #0073e6;
+    color: white;
+}
+
+.email-icon:hover {
+    background: #ea4335;
+    color: white;
+}
+
+.telegram-icon:hover {
+    background: #0088cc;
+    color: white;
+}
+
+.facebook-icon:hover {
+    background: #1877f2;
+    color: white;
 }
 
 main {
@@ -290,8 +326,13 @@ footer {
         font-size: 2rem;
     }
 
-    .contacts {
+    .social-icons {
         gap: 1rem;
+    }
+    
+    .social-icon {
+        width: 44px;
+        height: 44px;
     }
 
     .gallery-container {
@@ -403,9 +444,18 @@ body.lightbox-active .lightbox * {
         font-size: 1.5rem;
     }
 
-    .contacts {
-        flex-direction: column;
-        align-items: center;
+    .social-icons {
+        gap: 1rem;
+    }
+    
+    .social-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .social-icon svg {
+        width: 20px;
+        height: 20px;
     }
 
     .qr-code-center {
