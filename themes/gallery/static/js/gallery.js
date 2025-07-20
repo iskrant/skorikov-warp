@@ -1,5 +1,5 @@
 // Debug flag - set to true to enable touch event debugging
-const JS_DEBUG = true;
+const JS_DEBUG = false;
 
 class Gallery {
     constructor() {

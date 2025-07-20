@@ -25,12 +25,32 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HUGO_VERSION: 0.148.0
+      # Watermark parameters - can be tweaked without touching script logic
+      WM_PATH: themes/gallery/static/images/sig3.1.png   # watermark source
+      SOURCE_DIR: assets/images                           # originals
+      TARGET_DIR: assets/images                           # overwrite in workspace only
+      BACKUP_DIR: /tmp/original_images                    # where originals are copied
+      WM_OPACITY: 40                                      # percent
+      WM_GEOMETRY: +20+20                                 # x/y offset
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
+
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install imagemagick
+
+      - name: Water-mark gallery images
+        run: |
+          mkdir -p "$BACKUP_DIR"
+          find "$SOURCE_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | while read img; do
+            cp "$img" "$BACKUP_DIR"/
+            convert "$img" \( "$WM_PATH" -alpha set -channel A -evaluate set ${WM_OPACITY}% \) -gravity SouthEast -geometry "$WM_GEOMETRY" -compose over -composite "$img"
+          done
 
       - name: Install Hugo CLI
         run: |
