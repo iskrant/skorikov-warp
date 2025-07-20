@@ -1,3 +1,6 @@
+// Debug flag - set to true to enable touch event debugging
+const JS_DEBUG = true;
+
 class Gallery {
     constructor() {
         this.lightbox = document.getElementById('lightbox');
@@ -14,6 +17,12 @@ class Gallery {
         this.mode = 'swipe'; // Режим touch-жестов: 'swipe', 'pan', 'pinch'
         
         this.init();
+    }
+    
+    debug(message, ...args) {
+        if (JS_DEBUG) {
+            console.log(`[Gallery Debug] ${message}`, ...args);
+        }
     }
     
     init() {
@@ -168,12 +177,25 @@ class Gallery {
             isPanning = false;
             isPinching = false;
             
+            this.debug('TouchStart:', {
+                touches: startTouches,
+                scale: this.scale,
+                currentMode: this.mode
+            });
+            
             // Правильное переключение режимов
             if (startTouches === 1) {
                 this.mode = this.scale > 1 ? 'pan' : 'swipe';
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
                 hasMoved = false;
+                
+                this.debug('TouchStart - Single finger:', {
+                    newMode: this.mode,
+                    startX: startX,
+                    startY: startY,
+                    scale: this.scale
+                });
             } else if (startTouches === 2) {
                 // Pinch-to-zoom initialization
                 this.mode = 'pinch';
@@ -182,6 +204,11 @@ class Gallery {
                 isPinching = true;
                 // Prevent default browser zoom behavior only for two-finger touches
                 e.preventDefault();
+                
+                this.debug('TouchStart - Pinch mode:', {
+                    initialDistance: initialDistance,
+                    initialScale: initialScale
+                });
             }
         }, { passive: false });
         
@@ -223,26 +250,39 @@ class Gallery {
                         Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2)
                     );
                     
-                    // Set isPanning = true only for significant dragging (not swipe gestures)
-                    // This suppresses swipe detection only for actual dragging motions
-                    if (moveDistance > 30) {
-                        isPanning = true;
-                    }
+                    // In swipe mode (scale <= 1), we DON'T set isPanning = true
+                    // because we want to allow swipe detection in touchend
+                    // isPanning should only be true for actual pan operations when zoomed
                     
                     // Only mark as moved if exceeds swipe threshold
                     if (moveDistance > 10) {
                         hasMoved = true;
+                        this.debug('TouchMove - Swipe movement detected:', {
+                            moveDistance: moveDistance,
+                            hasMoved: hasMoved
+                        });
                     }
                 }
                 // Do NOT modify panX/panY in swipe mode
+                // Do NOT set isPanning in swipe mode
             }
         }, { passive: false });
         
         this.lightbox.addEventListener('touchend', (e) => {
+            this.debug('TouchEnd:', {
+                mode: this.mode,
+                scale: this.scale,
+                startTouches: startTouches,
+                isPanning: isPanning,
+                isPinching: isPinching,
+                hasMoved: hasMoved
+            });
+            
             if (this.mode === 'pan') {
                 // Finish panning: store lastPanX/Y, keep scale; DO NOT enter swipe code.
                 lastPanX = this.panX;
                 lastPanY = this.panY;
+                this.debug('TouchEnd - Pan mode finished');
                 return;
             }
             
@@ -255,6 +295,7 @@ if (startTouches >= 2 || isPinching) {
     lastPanX = this.panX;
     lastPanY = this.panY;
     isPinching = false;
+    this.debug('TouchEnd - Pinch finished, final scale:', this.scale);
     return;
 }
 
@@ -263,12 +304,23 @@ if (isPanning) {
     lastPanX = this.panX;
     lastPanY = this.panY;
     isPanning = false;
+    this.debug('TouchEnd - Panning finished');
     return;
 }
             
             // Only process swipe gestures when scale <= 1 AND if not panning
             // При scale > 1 режим pan блокирует свайп-навигацию
-            if (startTouches === 1 && e.changedTouches.length === 1 && !isPanning && this.scale <= 1) {
+            const canSwipe = startTouches === 1 && e.changedTouches.length === 1 && !isPanning && this.scale <= 1;
+            
+            this.debug('TouchEnd - Swipe check:', {
+                startTouches: startTouches,
+                changedTouches: e.changedTouches.length,
+                isPanning: isPanning,
+                scale: this.scale,
+                canSwipe: canSwipe
+            });
+            
+            if (canSwipe) {
                 endX = e.changedTouches[0].clientX;
                 endY = e.changedTouches[0].clientY;
                 
@@ -280,39 +332,74 @@ if (isPanning) {
                 // Distinguish between tap and swipe based on movement and duration
                 const isQuickTap = touchDuration < 300 && distance < 20;
                 
+                this.debug('TouchEnd - Gesture analysis:', {
+                    deltaX: deltaX,
+                    deltaY: deltaY,
+                    distance: distance,
+                    duration: touchDuration,
+                    isQuickTap: isQuickTap,
+                    hasMoved: hasMoved
+                });
+                
                 if (isQuickTap) {
                     // Handle tap
                     const target = e.target;
+                    this.debug('TouchEnd - Quick tap detected, target:', target.tagName);
+                    
                     if (target === this.lightbox || target.classList.contains('lightbox-content')) {
                         // Tap outside image - close lightbox
+                        this.debug('TouchEnd - Tap outside image, closing lightbox');
                         this.closeLightbox();
                     } else if (target === this.lightboxImage || target.closest('#lightbox-image')) {
                         // Tap on image - navigate
                         const rect = this.lightboxImage.getBoundingClientRect();
                         const tapX = endX - rect.left;
+                        const direction = tapX < rect.width / 2 ? 'previous' : 'next';
+                        this.debug('TouchEnd - Tap on image, navigating:', direction);
+                        
                         tapX < rect.width / 2 ? this.showPrevious() : this.showNext();
                     }
                 } else if (hasMoved && distance > 80) {
                     // Handle swipe (increased threshold for more deliberate gestures)
                     const minSwipeDistance = 80;
                     
+                    this.debug('TouchEnd - Swipe detected, analyzing direction...');
+                    
                     // Horizontal swipe
                     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
                         if (deltaX > 0) {
+                            this.debug('TouchEnd - Horizontal swipe RIGHT, going to previous');
                             this.showPrevious(); // Swipe right
                         } else {
+                            this.debug('TouchEnd - Horizontal swipe LEFT, going to next');
                             this.showNext(); // Swipe left
                         }
                     }
                     // Vertical swipe down
                     else if (deltaY > minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
+                        this.debug('TouchEnd - Vertical swipe DOWN, closing lightbox');
                         this.closeLightbox(); // Swipe down
                     }
                     // Vertical swipe up
                     else if (deltaY < -minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
+                        this.debug('TouchEnd - Vertical swipe UP, closing lightbox');
                         this.closeLightbox(); // Swipe up
+                    } else {
+                        this.debug('TouchEnd - Swipe detected but no direction matched', {
+                            absDeltaX: Math.abs(deltaX),
+                            absDeltaY: Math.abs(deltaY),
+                            minSwipeDistance: minSwipeDistance
+                        });
                     }
+                } else {
+                    this.debug('TouchEnd - No gesture detected', {
+                        hasMoved: hasMoved,
+                        distance: distance,
+                        threshold: 80
+                    });
                 }
+            } else {
+                this.debug('TouchEnd - Swipe conditions not met, ignoring gesture');
             }
         }, { passive: false });
         
@@ -537,4 +624,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// version 20.07.2025 14:39
+// version 20.07.2025 15:00 - Added comprehensive touch debug logging
