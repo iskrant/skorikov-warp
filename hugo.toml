@@ -5,7 +5,7 @@ theme = 'gallery'
 
 [params]
   artist_name = "Скориков Игорь Андреевич"
-  artist_title = "Художник."
+  artist_title = "Художник"
   artist_desk = "Член союза художников России"
   vk = "https://vk.com/igorandreev12345"
   email = "skorikov.igor@gmail.com"
