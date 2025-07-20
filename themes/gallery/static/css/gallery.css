@@ -350,10 +350,41 @@ footer {
 /* Disable gallery interactions when lightbox is active */
 body.lightbox-active .gallery-container {
     pointer-events: none;
+    touch-action: none;
 }
 
 body.lightbox-active .gallery-item {
     pointer-events: none;
+    touch-action: none;
+}
+
+/* Additional mobile protection */
+body.lightbox-active {
+    touch-action: none;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+body.lightbox-active * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Allow selection only in lightbox */
+body.lightbox-active .lightbox,
+body.lightbox-active .lightbox * {
+    -webkit-touch-callout: default;
+    -webkit-user-select: auto;
+    -khtml-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
 }
 
 @media (max-width: 768px) {

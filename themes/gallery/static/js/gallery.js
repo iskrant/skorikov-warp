@@ -51,6 +51,9 @@ class Gallery {
             }
         });
         
+        // Comprehensive mobile touch event blocking
+        this.setupMobileTouchBlocking();
+        
         // Prevent event propagation on lightbox to stop mobile touch passthrough
         this.lightbox.addEventListener('touchstart', (e) => {
             if (e.target === this.lightbox || e.target.classList.contains('lightbox-content')) {
@@ -94,6 +97,53 @@ class Gallery {
             if (this.lightbox.classList.contains('active')) {
                 this.scaleImage();
             }
+        });
+    }
+    
+    setupMobileTouchBlocking() {
+        // Block all touch events on gallery items when lightbox is active
+        const blockTouchEvent = (e) => {
+            if (document.body.classList.contains('lightbox-active')) {
+                const target = e.target;
+                const galleryItem = target.closest('.gallery-item');
+                const galleryContainer = target.closest('.gallery-container');
+                
+                // Block events on gallery items and container
+                if (galleryItem || galleryContainer) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
+            }
+        };
+        
+        // Add event listeners for all touch events
+        ['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(eventType => {
+            document.addEventListener(eventType, blockTouchEvent, {
+                passive: false,
+                capture: true
+            });
+        });
+        
+        // Also block click events on mobile
+        document.addEventListener('click', (e) => {
+            if (document.body.classList.contains('lightbox-active')) {
+                const target = e.target;
+                const galleryItem = target.closest('.gallery-item');
+                const galleryContainer = target.closest('.gallery-container');
+                
+                // Block clicks on gallery items and container
+                if (galleryItem || galleryContainer) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
+            }
+        }, {
+            passive: false,
+            capture: true
         });
     }
     
