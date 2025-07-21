@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.LanguageCode }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <meta name="description" content="{{ .Site.Params.artist_name }} - {{ .Site.Params.artist_title }}">
+    <link rel="stylesheet" href="{{ "css/gallery.css" | relURL }}">
+    
+    {{/* Добавляем альтернативные языки для SEO */}}
+    {{ range .Site.Languages }}
+    <link rel="alternate" hreflang="{{ .LanguageCode }}" href="{{ $.Permalink | relLangURL }}" />
+    {{ end }}
+    <!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+  ym(101486023, "init", {
+       clickmap:true,
+       trackLinks:true,
+       accurateTrackBounce:true,
+       webvisor:true
+  });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/101486023" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+    <header>
+        {{/* Переключатель языков */}}
+        <div class="language-switcher">
+            {{ range .Site.Languages }}
+                {{ if not (eq .Lang $.Site.Language.Lang) }}
+                    <a href="{{ $.Permalink | relLangURL }}" class="lang-link">
+                        {{ if eq .Lang "en" }}{{ i18n "switch_to_en" }}{{ else }}{{ i18n "switch_to_ru" }}{{ end }}
+                    </a>
+                {{ end }}
+            {{ end }}
+        </div>
+        
+        <div class="qr-code-center">
+            <img src="{{ "images/avatar.png" | relURL }}" alt="{{ i18n "qr_alt" }}">
+        </div>
+        <div class="artist-info">
+            <h1>{{ .Site.Params.artist_name }}</h1>
+            <p>{{ .Site.Params.artist_title }}</p>
+            <p>{{ .Site.Params.artist_desk }}</p>
+            <div class="social-icons">
+                <a href="{{ .Site.Params.vk }}" target="_blank" title="{{ i18n "vk_title" }}" class="social-icon vk-icon">
+                    <span style="font-weight: bold; font-size: 14px;">Vk</span>
+                </a>
+                <a href="mailto:{{ .Site.Params.email }}" title="{{ i18n "email_title" }}" class="social-icon email-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </a>
+                <a href="https://t.me/{{ strings.TrimPrefix "@" .Site.Params.telegram }}" target="_blank" title="{{ i18n "telegram_title" }}" class="social-icon telegram-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.03-.18.16-.37.4-.56 3.71-1.62 6.19-2.69 7.45-3.19 3.46-1.5 4.18-1.76 4.65-1.76s.8.06.9.36c.05.17.05.38-.01.59z"/>
+                    </svg>
+                </a>
+                <a href="{{ .Site.Params.facebook }}" target="_blank" title="{{ i18n "facebook_title" }}" class="social-icon facebook-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="phone-icon-bottom">
+            <img src="{{ "images/tel.png" | relURL }}" alt="{{ i18n "phone_alt" }}">
+        </div>
+    </header>
+
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="brush-icon">
+                <img src="{{ "images/brush.png" | relURL }}" alt="{{ i18n "brush_alt" }}">
+            </div>
+            <div class="footer-text">
+                <p>&copy; {{ now.Format "2006" }} {{ .Site.Params.artist_name }}</p>
+                <p>{{ i18n "footer_art_eternal" }}</p>
+            </div>
+        </div>
+        <div class="artist-bio">
+            <p>{{ i18n "artist_bio" }}</p>
+        </div>
+    </footer>
+
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <img id="lightbox-image" src="" alt="">
+        </div>
+    </div>
+
+    <script src="{{ "js/gallery.js" | relURL }}"></script>
+</body>
+</html>

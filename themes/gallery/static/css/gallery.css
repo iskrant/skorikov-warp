@@ -19,6 +19,33 @@ header {
     position: relative;
 }
 
+/* Language switcher */
+.language-switcher {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+}
+
+.lang-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.lang-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .qr-code-center {
     display: flex;
     justify-content: center;
@@ -322,6 +349,16 @@ footer {
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+    .language-switcher {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .lang-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
     .artist-info h1 {
         font-size: 2rem;
     }

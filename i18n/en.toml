@@ -1,0 +1,52 @@
+# English translations for gallery
+
+[vk_title]
+other = "VKontakte"
+
+[email_title]
+other = "Email"
+
+[telegram_title]
+other = "Telegram"
+
+[facebook_title]
+other = "Facebook"
+
+[qr_alt]
+other = "QR code"
+
+[phone_alt]
+other = "Phone"
+
+[brush_alt]
+other = "Artist's brush"
+
+[painting_alt]
+other = "Painting"
+
+[no_images]
+other = "No images found. Place images in the folder"
+
+[assets_folder]
+other = "assets/images/"
+
+[footer_art_eternal]
+other = "Art is eternal"
+
+[copyright]
+other = "© {{ .Year }} {{ .ArtistName }}"
+
+[switch_to_en]
+other = "English"
+
+[switch_to_ru]
+other = "Русский"
+
+[artist_bio]
+other = """Igor Andreevich Skorikov is a painter and member of the Union of Artists of Russia. He acquired his first skills in fine arts while studying at the Ostrogozhsk Art School named after I. N. Kramskoy. Subsequently, he received higher artistic and pedagogical education (KSU). He continued his creative activity and studies in St. Petersburg (1984-1998), attending drawing classes and private studios. Currently lives and works in Voronezh. He is a regular participant of regional, all-Russian and international exhibitions of the Union of Artists of Russia, and has held a number of personal exhibitions. His works are in museum and private collections in Russia and other countries.
+
+"Igor Skorikov works in a realistic manner, inspired by the art of the old masters, with their inherent unhurried rhythm and deep contemplation. His painting is complex, glazed, avoiding flashy external effects and expressive dynamics. Time in his paintings seems to slow down, giving the opportunity to live minutes and hours consciously, 'passing' them through oneself. An object, as an event, emerges in contrast to emptiness, standing out from the flow of forms and time.
+
+The artist's favorite genre is still life - a genre that allows presenting an abstract, philosophical view of the world, time, nature, and human life. The choice of objects is never accidental; building an imagery system, the artist speaks about the world, about time, about life. Each painting is a reflection through contemplation, sometimes filled with tragic notes. The main characters of still lifes - objects - have lost their bright shine, accumulated dents and scratches, acquiring a biography. Compositions are built into mise-en-scènes, unfolding stories of human existence.
+
+Having passed the seduction of 'realism' of the image and simple viewing, the attentive viewer is immersed in their own experiences and contemplation." © Natalia Bakina, art historian."""
