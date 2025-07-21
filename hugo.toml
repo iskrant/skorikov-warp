@@ -1,6 +1,16 @@
 baseURL = 'https://username.github.io/skorikov-gallery'
-languageCode = 'ru-ru'
-title = 'Скориков Игорь Андреевич - Галерея'
+[languages]
+  [languages.ru]
+    languageCode = 'ru-ru'
+    languageName = 'Русский'
+    title = 'Скориков Игорь Андреевич - Галерея'
+    weight = 1
+
+  [languages.en]
+    languageCode = 'en-us'
+    languageName = 'English'
+    title = 'Skorikov Igor Andreevich - Gallery'
+    weight = 2
 theme = 'gallery'
 
 [params]

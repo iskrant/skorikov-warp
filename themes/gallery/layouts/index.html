@@ -5,12 +5,12 @@
         {{ range $index, $image := $images }}
             {{ $thumb := $image.Resize "300x q85" }}
             <div class="gallery-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}" data-title="{{ $image.Name }}">
-                <img src="{{ $thumb.RelPermalink }}" alt="Картина {{ add $index 1 }}" loading="lazy">
+                <img src="{{ $thumb.RelPermalink }}" alt="{{ i18n "painting_alt_text" (add $index 1) }}" loading="lazy">
             </div>
         {{ end }}
     {{ else }}
         <div class="no-images">
-            <p>Изображения не найдены. Поместите изображения в папку <code>assets/images/</code></p>
+            <p>{{ i18n "no_images_message" }}</p>
         </div>
     {{ end }}
 </div>
