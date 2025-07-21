@@ -13,7 +13,7 @@ class Gallery {
         // Touch/zoom state variables
         this.scale = 1;
         this.panX = 0;
-1        this.panY = 0;
+        this.panY = 0;
         this.mode = 'swipe'; // Режим touch-жестов: 'swipe', 'pan', 'pinch'
         this.touchNavigated = false; // Prevent double navigation from touch + click
 
@@ -80,13 +80,13 @@ class Gallery {
         // Image click navigation (only if not recently navigated via touch)
         this.lightboxImage.addEventListener('click', (e) => {
             e.stopPropagation();
-            
+
             // Prevent double navigation if touch event just handled navigation
             if (this.touchNavigated) {
                 this.debug('Click navigation blocked - recent touch navigation');
                 return;
             }
-            
+
             const rect = this.lightboxImage.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             this.debug('Click navigation triggered:', clickX < rect.width / 2 ? 'previous' : 'next');
@@ -387,7 +387,7 @@ if (isPanning) {
                         setTimeout(() => {
                             this.touchNavigated = false;
                         }, 100); // Reset after 100ms
-                        
+
                         if (deltaX > 0) {
                             this.debug('TouchEnd - Horizontal swipe RIGHT, going to previous');
                             this.showPrevious(); // Swipe right
