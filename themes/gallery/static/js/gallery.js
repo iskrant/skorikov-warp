@@ -13,8 +13,9 @@ class Gallery {
         // Touch/zoom state variables
         this.scale = 1;
         this.panX = 0;
-        this.panY = 0;
+1        this.panY = 0;
         this.mode = 'swipe'; // Режим touch-жестов: 'swipe', 'pan', 'pinch'
+        this.touchNavigated = false; // Prevent double navigation from touch + click
 
         this.init();
     }
@@ -76,11 +77,19 @@ class Gallery {
             }
         }, { passive: false });
 
-        // Image click navigation
+        // Image click navigation (only if not recently navigated via touch)
         this.lightboxImage.addEventListener('click', (e) => {
             e.stopPropagation();
+            
+            // Prevent double navigation if touch event just handled navigation
+            if (this.touchNavigated) {
+                this.debug('Click navigation blocked - recent touch navigation');
+                return;
+            }
+            
             const rect = this.lightboxImage.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
+            this.debug('Click navigation triggered:', clickX < rect.width / 2 ? 'previous' : 'next');
             clickX < rect.width / 2 ? this.showPrevious() : this.showNext();
         });
 
@@ -357,6 +366,12 @@ if (isPanning) {
                         const direction = tapX < rect.width / 2 ? 'previous' : 'next';
                         this.debug('TouchEnd - Tap on image, navigating:', direction);
 
+                        // Set flag to prevent double navigation from subsequent click event
+                        this.touchNavigated = true;
+                        setTimeout(() => {
+                            this.touchNavigated = false;
+                        }, 100); // Reset after 100ms
+
                         tapX < rect.width / 2 ? this.showPrevious() : this.showNext();
                     }
                 } else if (hasMoved && distance > 80) {
@@ -367,6 +382,12 @@ if (isPanning) {
 
                     // Horizontal swipe
                     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                        // Set flag to prevent double navigation from subsequent click event
+                        this.touchNavigated = true;
+                        setTimeout(() => {
+                            this.touchNavigated = false;
+                        }, 100); // Reset after 100ms
+                        
                         if (deltaX > 0) {
                             this.debug('TouchEnd - Horizontal swipe RIGHT, going to previous');
                             this.showPrevious(); // Swipe right
@@ -442,6 +463,8 @@ if (isPanning) {
         this.panY = 0;
         // Clear mode to ensure next open starts in normal mode
         this.mode = 'swipe';
+        // Reset touch navigation flag
+        this.touchNavigated = false;
     }
 
     showPrevious() {
@@ -624,4 +647,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// version 20.07.2025 15:00 - Added comprehensive touch debug logging
+// version 21.07.2025 17:20 - Fixed double page flips by preventing click events after touch navigation
