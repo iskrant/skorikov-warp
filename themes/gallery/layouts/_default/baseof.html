@@ -6,7 +6,7 @@
     <title>{{ .Title }} | {{ .Site.Title }}</title>
     <meta name="description" content="{{ .Site.Params.artist_name }} - {{ .Site.Params.artist_title }}">
     <link rel="stylesheet" href="{{ "css/gallery.css" | relURL }}">
-    
+
     {{/* Добавляем альтернативные языки для SEO */}}
     {{ range .Site.Languages }}
     <link rel="alternate" hreflang="{{ .LanguageCode }}" href="{{ $.Permalink | relLangURL }}" />
@@ -36,10 +36,10 @@
             {{ if eq $.Site.Language.Lang "ru" }}
                 <a href="{{ "en/" | relURL }}" class="lang-link">{{ i18n "switch_to_en" }}</a>
             {{ else }}
-                <a href="{{ "/" | relURL }}" class="lang-link">{{ i18n "switch_to_ru" }}</a>
+                <a href="{{ "ru/" | relURL }}" class="lang-link">{{ i18n "switch_to_ru" }}</a>
             {{ end }}
         </div>
-        
+
         <div class="qr-code-center">
             <img src="{{ "images/avatar.png" | relURL }}" alt="{{ i18n "qr_alt" }}">
         </div>
