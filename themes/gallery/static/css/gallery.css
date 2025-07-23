@@ -179,7 +179,7 @@ main {
     background: white;
     display: inline-block;
     width: 100%;
-    margin: 0;
+    margin-bottom: 8px;
     padding: 0;
     break-inside: avoid;
     page-break-inside: avoid;
@@ -371,9 +371,14 @@ footer {
         width: 44px;
         height: 44px;
     }
-
+    
     .gallery-container {
         column-width: 200px;
+        column-gap: 12px;
+    }
+    
+    .gallery-item {
+        margin-bottom: 12px;
     }
 
     .gallery-item:hover {
@@ -475,6 +480,11 @@ body.lightbox-active .lightbox * {
 @media (max-width: 480px) {
     .gallery-container {
         column-width: 150px;
+        column-gap: 16px;
+    }
+    
+    .gallery-item {
+        margin-bottom: 16px;
     }
 
     .artist-info h1 {
