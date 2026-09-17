@@ -1,5 +1,12 @@
 # Галерея Скорикова Игоря Андреевича
 
+Сайт: https://skorikov.su/ · GitHub Pages: https://skorikov-igor.github.io/
+
+Исходники в `iskrant/skorikov-warp` автоматически копируются в
+`skorikov-igor/skorikov-igor.github.io` по расписанию (каждые 5 минут, возможны
+задержки GitHub Actions). После обновления зеркала сайт Pages пересобирается.
+Изменения вносите в основной репозиторий; зеркало обновляется только fast-forward.
+
 Для работы со служебными документами и доступами после клонирования см.
 [PRIVATE.md](PRIVATE.md): `python3 scripts/private.py unseal`.
 
