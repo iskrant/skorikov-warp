@@ -1,0 +1,42 @@
+name: Mirror source to artist account
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: artist-source-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    if: github.repository == 'skorikov-igor/skorikov-igor.github.io'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: master
+      - name: Configure repository-scoped SSH key
+        env:
+          MIRROR_KEY: ${{ secrets.ARTIST_MIRROR_SSH_KEY }}
+          KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
+        run: |
+          test -n "$MIRROR_KEY"
+          test -n "$KNOWN_HOSTS"
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$MIRROR_KEY" > "$HOME/.ssh/artist_mirror"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/artist_mirror" "$HOME/.ssh/known_hosts"
+      - name: Fast-forward artist source branch
+        env:
+          GIT_SSH_COMMAND: ssh -i /home/runner/.ssh/artist_mirror -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes
+        run: |
+          git fetch https://github.com/iskrant/skorikov-warp.git master
+          git merge --ff-only FETCH_HEAD
+          git push git@github.com:skorikov-igor/skorikov-igor.github.io.git HEAD:refs/heads/master

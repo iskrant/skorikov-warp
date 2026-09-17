@@ -23,6 +23,9 @@ defaults:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages-deployment.outputs.page_url }}
     env:
       HUGO_VERSION: 0.148.0
       # Watermark parameters - can be tweaked without touching script logic
@@ -47,18 +50,18 @@ jobs:
       - name: Water-mark gallery images
         run: |
           mkdir -p "$BACKUP_DIR"
-          find "$SOURCE_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | while read img; do
+          find "$SOURCE_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -print0 | while IFS= read -r -d '' img; do
             cp "$img" "$BACKUP_DIR"/
             # Get image width and calculate watermark size (1/10 of image width)
             img_width=$(identify -ping -format "%w" "$img")
             wm_width=$((img_width / 10))
             # Apply watermark: resize to 1/10 width, preserve transparency, set opacity only for non-transparent pixels
-            convert "$img" \( "$WM_PATH" -resize "${wm_width}x" -alpha set -channel A -evaluate multiply ${WM_OPACITY}% +channel \) -gravity SouthEast -geometry "$WM_GEOMETRY" -compose over -composite "$img"
+            convert "$img" \( "$WM_PATH" -resize "${wm_width}x" -alpha set -channel A -evaluate multiply "${WM_OPACITY}%" +channel \) -gravity SouthEast -geometry "$WM_GEOMETRY" -compose over -composite "$img"
           done
 
       - name: Install Hugo CLI
         run: |
-          wget -O /tmp/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+          wget -O /tmp/hugo.deb "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
           sudo dpkg -i /tmp/hugo.deb
           hugo version
 
@@ -67,9 +70,27 @@ jobs:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
-          hugo --gc --minify --baseURL "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          owner="${{ github.repository_owner }}"
+          repository="${{ github.event.repository.name }}"
+          base_url="https://${owner}.github.io/"
+          if [ "${repository,,}" != "${owner,,}.github.io" ]; then
+            base_url="${base_url}${repository}/"
+          fi
+          hugo --gc --minify --baseURL "$base_url"
+
+      - name: Upload artist Pages artifact
+        if: github.repository == 'skorikov-igor/skorikov-igor.github.io'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+
+      - name: Deploy artist Pages artifact
+        if: github.repository == 'skorikov-igor/skorikov-igor.github.io'
+        id: pages-deployment
+        uses: actions/deploy-pages@v4
 
       - name: Deploy to GitHub Pages
+        if: github.repository != 'skorikov-igor/skorikov-igor.github.io'
         run: |
           # Configure git
           git config --global user.name "github-actions[bot]"

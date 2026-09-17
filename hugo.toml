@@ -1,4 +1,4 @@
-baseURL = 'https://username.github.io/skorikov-gallery'
+baseURL = 'https://skorikov.su/'
 defaultContentLanguage = 'ru'
 theme = 'gallery'
 
