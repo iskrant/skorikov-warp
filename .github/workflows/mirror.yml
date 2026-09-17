@@ -1,6 +1,9 @@
 name: Mirror source to artist account
 
 on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mirror.yml']
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
