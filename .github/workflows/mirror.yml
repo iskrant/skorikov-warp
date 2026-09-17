@@ -1,11 +1,8 @@
-name: Mirror source to artist account
+name: Daily mirror safety check
 
 on:
-  push:
-    branches: [master]
-    paths: ['.github/workflows/mirror.yml']
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '17 3 * * *'
   workflow_dispatch:
 
 permissions:
@@ -36,7 +33,7 @@ jobs:
           printf '%s\n' "$MIRROR_KEY" > "$HOME/.ssh/artist_mirror"
           printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/artist_mirror" "$HOME/.ssh/known_hosts"
-      - name: Fast-forward artist source branch
+      - name: Fast-forward from primary repository
         env:
           GIT_SSH_COMMAND: ssh -i /home/runner/.ssh/artist_mirror -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes
         run: |

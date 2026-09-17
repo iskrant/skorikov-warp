@@ -2,10 +2,10 @@
 
 Сайт: https://skorikov.su/ · GitHub Pages: https://skorikov-igor.github.io/
 
-Исходники в `iskrant/skorikov-warp` автоматически копируются в
-`skorikov-igor/skorikov-igor.github.io` по расписанию (каждые 5 минут, возможны
-задержки GitHub Actions). После обновления зеркала сайт Pages пересобирается.
-Изменения вносите в основной репозиторий; зеркало обновляется только fast-forward.
+Локальный `git push origin master` отправляет изменения одновременно в
+`iskrant/skorikov-warp` и `skorikov-igor/skorikov-igor.github.io`. После push
+сайт Pages автоматически пересобирается. Резервная проверка синхронизации
+выполняется один раз в сутки в 03:17 UTC.
 
 Для работы со служебными документами и доступами после клонирования см.
 [PRIVATE.md](PRIVATE.md): `python3 scripts/private.py unseal`.
