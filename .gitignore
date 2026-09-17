@@ -25,3 +25,23 @@ pids
 # Node.js
 node_modules/
 npm-debug.log*
+
+# Local plaintext; versioned only inside private.age
+/.private/
+/PUBLISHING.md
+/NGINX.md
+/fixes.md
+/_agent_notes.md
+/DEPLOYMENT.md
+/I18N_GUIDE.md
+/.dev-nginx-conf/
+/sudoers.d/
+/.agents/
+/.codex/
+AGENTS.md
+SKILL.md
+codex-age-key.txt
+*.pem
+*.key
+.env
+.env.*
