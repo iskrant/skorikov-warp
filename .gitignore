@@ -25,6 +25,8 @@ pids
 # Node.js
 node_modules/
 npm-debug.log*
+__pycache__/
+*.pyc
 
 # Local plaintext; versioned only inside private.age
 /.private/
@@ -37,7 +39,8 @@ npm-debug.log*
 /.dev-nginx-conf/
 /sudoers.d/
 /.agents/
-/.codex/
+/.codex/*
+!/.codex/hooks.json
 AGENTS.md
 SKILL.md
 codex-age-key.txt

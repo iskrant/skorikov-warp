@@ -1,0 +1,16 @@
+#!/bin/sh
+# Restore instructions before Codex discovers AGENTS.md and repository skills.
+set -eu
+project_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$project_root"
+python3 scripts/private.py prepare --install-hooks
+export SOPS_AGE_KEY_FILE="${AGE_IDENTITY:-$HOME/_AI/codex-age-key.txt}"
+if [ -n "${CODEX_LAUNCHER:-}" ]; then
+    exec "$CODEX_LAUNCHER" "$@"
+elif [ -x "$HOME/codex.sh" ]; then
+    exec "$HOME/codex.sh" "$@"
+else
+    echo 'Запуск без Wrapper-а!'
+    sleep 10
+    exec codex "$@"
+fi

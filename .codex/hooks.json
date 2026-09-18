@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/scripts/private.py\" prepare --install-hooks --session-start",
+            "timeout": 30,
+            "statusMessage": "Preparing encrypted workspace",
+            "additionalContextLimit": 1000
+          }
+        ]
+      }
+    ]
+  }
+}
