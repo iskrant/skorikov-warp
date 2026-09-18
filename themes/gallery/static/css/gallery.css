@@ -293,6 +293,26 @@ footer {
     display: flex;
 }
 
+.lightbox-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    width: 44px;
+    height: 44px;
+    border: 1px solid white;
+    border-radius: 50%;
+    background: #222;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.gallery-item:focus-visible {
+    outline: 3px solid white;
+    outline-offset: -3px;
+}
+
 .lightbox-content {
     position: relative;
     max-width: 100%;

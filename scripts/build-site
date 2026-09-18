@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+cd "$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+if [ -z "${HUGO_RELEASE_COMMIT:-}" ]; then
+    HUGO_RELEASE_COMMIT=$(git rev-parse HEAD)
+    if ! git diff --quiet HEAD --; then
+        HUGO_RELEASE_COMMIT="${HUGO_RELEASE_COMMIT}-dirty"
+    fi
+fi
+HUGO_RELEASE_TIME=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+export HUGO_RELEASE_COMMIT HUGO_RELEASE_TIME
+exec hugo "$@"

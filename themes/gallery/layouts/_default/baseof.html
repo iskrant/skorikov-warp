@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.Language.LanguageCode }}">
 <head>
+    {{ $commit := os.Getenv "HUGO_RELEASE_COMMIT" | default "unversioned" }}
+    {{ $builtAt := os.Getenv "HUGO_RELEASE_TIME" | default (now.UTC.Format "2006-01-02T15:04:05Z") }}
+    {{ printf "<!-- release: commit=%s built_at=%s -->" $commit $builtAt | safeHTML }}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    <link rel="canonical" href="{{ .Permalink }}">
     <meta name="description" content="{{ .Site.Params.artist_name }} - {{ .Site.Params.artist_title }}">
     <link rel="stylesheet" href="{{ "css/gallery.css" | relURL }}">
 
     {{/* Добавляем альтернативные языки для SEO */}}
-    {{ range .Site.Languages }}
-    <link rel="alternate" hreflang="{{ .LanguageCode }}" href="{{ $.Permalink | relLangURL }}" />
+    {{ range .AllTranslations }}
+    <link rel="alternate" hreflang="{{ .Language.LanguageCode }}" href="{{ .Permalink }}" />
     {{ end }}
     <!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
@@ -26,22 +30,20 @@
        webvisor:true
   });
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/101486023" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
 </head>
 <body>
+    <noscript><div><img src="https://mc.yandex.ru/watch/101486023" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <header>
         {{/* Переключатель языков */}}
         <div class="language-switcher">
-            {{ if eq $.Site.Language.Lang "ru" }}
-                <a href="{{ "en/" | relURL }}" class="lang-link">{{ i18n "switch_to_en" }}</a>
-            {{ else }}
-                <a href="{{ "ru/" | relURL }}" class="lang-link">{{ i18n "switch_to_ru" }}</a>
+            {{ range .Translations }}
+                <a href="{{ .RelPermalink }}" hreflang="{{ .Language.LanguageCode }}" class="lang-link">{{ .Language.LanguageName }}</a>
             {{ end }}
         </div>
 
         <div class="qr-code-center">
-            <img src="{{ "images/avatar.png" | relURL }}" alt="{{ i18n "qr_alt" }}">
+            <img src="{{ "images/avatar.png" | relURL }}" alt="{{ .Site.Params.artist_name }}">
         </div>
         <div class="artist-info">
             <h1>{{ .Site.Params.artist_name }}</h1>
@@ -92,7 +94,8 @@
         </div>
     </footer>
 
-    <div id="lightbox" class="lightbox">
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="{{ i18n "painting_alt" }}" aria-hidden="true">
+        <button type="button" class="lightbox-close" aria-label="{{ i18n "close" }}">×</button>
         <div class="lightbox-content">
             <img id="lightbox-image" src="" alt="">
         </div>

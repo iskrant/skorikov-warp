@@ -2,6 +2,10 @@ baseURL = 'https://skorikov.su/'
 defaultContentLanguage = 'ru'
 theme = 'gallery'
 
+# Preserve the release marker even in production builds with --minify.
+[minify.tdewolff.html]
+  keepComments = true
+
 [languages]
   [languages.ru]
     languageCode = 'ru-ru'

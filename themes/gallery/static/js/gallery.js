@@ -1,10 +1,11 @@
 // Debug flag - set to true to enable touch event debugging
-const JS_DEBUG = true;
+const JS_DEBUG = false;
 
 class Gallery {
     constructor() {
         this.lightbox = document.getElementById('lightbox');
         this.lightboxImage = document.getElementById('lightbox-image');
+        this.closeButton = document.querySelector('.lightbox-close');
         this.galleryItems = document.querySelectorAll('.gallery-item');
         this.currentIndex = 0;
         this.images = [];
@@ -43,7 +44,9 @@ class Gallery {
                 title: Gallery.cleanFilenameToTitle(title)
             });
 
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (event) => {
+                if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
                 this.openLightbox(index);
             });
         });
@@ -54,6 +57,7 @@ class Gallery {
     }
 
     bindEvents() {
+        this.closeButton.addEventListener('click', () => this.closeLightbox());
         // Close lightbox when clicking outside image
         this.lightbox.addEventListener('click', (e) => {
             if (e.target === this.lightbox || e.target.classList.contains('lightbox-content')) {
@@ -82,7 +86,7 @@ class Gallery {
             e.stopPropagation();
 
             // Prevent double navigation if touch event just handled navigation
-            if (this.touchNavigated) {
+            if (this.touchNavigated || this.isZoomed()) {
                 this.debug('Click navigation blocked - recent touch navigation');
                 return;
             }
@@ -96,6 +100,8 @@ class Gallery {
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (!this.lightbox.classList.contains('active')) return;
+            if (['Escape', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) e.preventDefault();
+            if (e.key === 'Tab') this.closeButton.focus();
 
             switch(e.key) {
                 case 'Escape':
@@ -197,6 +203,8 @@ class Gallery {
                 this.mode = this.scale > 1 ? 'pan' : 'swipe';
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
+                lastPanX = this.panX;
+                lastPanY = this.panY;
                 hasMoved = false;
 
                 this.debug('TouchStart - Single finger:', {
@@ -242,8 +250,8 @@ class Gallery {
                     // Handle single-finger pan
                     const currentX = e.touches[0].clientX;
                     const currentY = e.touches[0].clientY;
-                    this.panX = lastPanX + (currentX - startX);
-                    this.panY = lastPanY + (currentY - startY);
+                    this.panX = lastPanX + (currentX - startX) / this.scale;
+                    this.panY = lastPanY + (currentY - startY) / this.scale;
                     this.lightboxImage.style.transform = `scale(${this.scale}) translate(${this.panX}px, ${this.panY}px)`;
                     isPanning = true;
                 }
@@ -435,9 +443,16 @@ if (isPanning) {
     }
 
     openLightbox(index) {
+        this.previousFocus = document.activeElement;
+        this.scrollY = window.scrollY;
+        this.previousOverflow = document.body.style.overflow;
+        this.previousTop = document.body.style.top;
+        document.body.style.top = `-${this.scrollY}px`;
         this.currentIndex = index;
         this.lightboxImage.src = this.images[index].src;
         this.lightbox.classList.add('active');
+        this.lightbox.setAttribute('aria-hidden', 'false');
+        this.closeButton.focus({ preventScroll: true });
         document.body.style.overflow = 'hidden';
         document.body.classList.add('lightbox-active'); // Disable gallery interactions
 
@@ -452,9 +467,14 @@ if (isPanning) {
     }
 
     closeLightbox() {
+        if (!this.lightbox.classList.contains('active')) return;
         this.lightbox.classList.remove('active');
-        document.body.style.overflow = '';
+        this.lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = this.previousOverflow;
+        document.body.style.top = this.previousTop;
         document.body.classList.remove('lightbox-active'); // Re-enable gallery interactions
+        window.scrollTo(0, this.scrollY);
+        this.previousFocus?.focus({ preventScroll: true });
         // Reset transform when closing lightbox
         this.lightboxImage.style.transform = 'scale(1)';
         // Reset zoom and pan state
@@ -506,19 +526,16 @@ if (isPanning) {
         this.panX = 0;
         this.panY = 0;
 
-        // Wait for image to load and then apply smart scaling
-        this.lightboxImage.onload = () => {
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const padding = 32; // Минимальный отступ только сверху и снизу (1rem * 2)
+        // Viewport constraints must also update for cached images and on resize.
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const padding = 64 + (this.lightboxTitle?.offsetHeight || 0);
 
-            const maxWidth = viewportWidth; // Используем всю ширину
-            const maxHeight = viewportHeight - padding;
+        const maxWidth = viewportWidth;
+        const maxHeight = Math.max(1, viewportHeight - padding);
 
-            // Apply constraints to ensure image fits in viewport
-            this.lightboxImage.style.maxWidth = `${maxWidth}px`;
-            this.lightboxImage.style.maxHeight = `${maxHeight}px`;
-        };
+        this.lightboxImage.style.maxWidth = `${maxWidth}px`;
+        this.lightboxImage.style.maxHeight = `${maxHeight}px`;
     }
 
     preloadAdjacentImages() {
@@ -555,6 +572,7 @@ if (isPanning) {
      * Updates the title text based on the current image
      */
     updateTitle() {
+        this.lightboxImage.alt = this.images[this.currentIndex].title;
         if (this.lightboxTitle) {
             // Use the pre-cleaned title from the slides array for quick access
             const currentImage = this.images[this.currentIndex];
