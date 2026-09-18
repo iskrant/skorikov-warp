@@ -366,8 +366,9 @@ if (isPanning) {
                     if (target === this.lightbox || target.classList.contains('lightbox-content')) {
                         // Tap outside image - close lightbox
                         this.debug('TouchEnd - Tap outside image, closing lightbox');
-                        this.closeLightbox();
+                        this.closeLightbox(e);
                     } else if (target === this.lightboxImage || target.closest('#lightbox-image')) {
+                        e.preventDefault(); // The tap is handled here, not by a second click.
                         // Tap on image - navigate
                         const rect = this.lightboxImage.getBoundingClientRect();
                         const tapX = endX - rect.left;
@@ -390,6 +391,7 @@ if (isPanning) {
 
                     // Horizontal swipe
                     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                        e.preventDefault();
                         // Set flag to prevent double navigation from subsequent click event
                         this.touchNavigated = true;
                         setTimeout(() => {
@@ -407,12 +409,12 @@ if (isPanning) {
                     // Vertical swipe down
                     else if (deltaY > minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
                         this.debug('TouchEnd - Vertical swipe DOWN, closing lightbox');
-                        this.closeLightbox(); // Swipe down
+                        this.closeLightbox(e); // Swipe down
                     }
                     // Vertical swipe up
                     else if (deltaY < -minSwipeDistance && Math.abs(deltaY) > Math.abs(deltaX)) {
                         this.debug('TouchEnd - Vertical swipe UP, closing lightbox');
-                        this.closeLightbox(); // Swipe up
+                        this.closeLightbox(e); // Swipe up
                     } else {
                         this.debug('TouchEnd - Swipe detected but no direction matched', {
                             absDeltaX: Math.abs(deltaX),
@@ -466,8 +468,11 @@ if (isPanning) {
         this.preloadAdjacentImages();
     }
 
-    closeLightbox() {
+    closeLightbox(event) {
         if (!this.lightbox.classList.contains('active')) return;
+        // Cancel the compatibility click before removing its original touch target.
+        // Otherwise mobile browsers may retarget it to a thumbnail underneath.
+        if (event?.cancelable) event.preventDefault();
         this.lightbox.classList.remove('active');
         this.lightbox.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = this.previousOverflow;
